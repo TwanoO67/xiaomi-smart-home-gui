@@ -11,6 +11,6 @@ RUN npm install
 # Bundle app source
 COPY . /usr/src/app
 
-node ./mihome/creadeDb.js
+RUN node ./mihome/creadeDb.js
 
 CMD [ "node", "./mihome/logger.js" ]
