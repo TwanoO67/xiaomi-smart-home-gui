@@ -2288,6 +2288,6 @@ class PHP_CRUD_API {
 
 $api = new PHP_CRUD_API(array(
  	'dbengine'=>'SQLite',
- 	'database'=>'database.db',
+ 	'database'=>'../db/database.db',
  ));
  $api->executeCommand();
