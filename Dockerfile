@@ -13,6 +13,9 @@ COPY . /usr/src/app
 
 RUN ls -al
 
+#Création de la base
+RUN mkdir -p /data
+RUN touch /data/database.db
 RUN node ./mihome/createDb.js
 
 CMD [ "node", "./mihome/logger.js" ]
