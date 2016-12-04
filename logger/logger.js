@@ -7,7 +7,9 @@ var sidToAddress = {};
 var sidToPort = {};
 
 var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database('/data/database.db');
+var path = require('path');
+// specify current directory explicitly
+var db = new sqlite3.Database(path.join(__dirname, '..', 'db', 'database.db'));
 
 var stmt = db.prepare("INSERT INTO xiaomi_log (date,sid,model,data) VALUES (?,?,?,?)");
 //db.close();
