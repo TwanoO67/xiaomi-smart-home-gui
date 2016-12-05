@@ -1,0 +1,26 @@
+<app-header>Chargement du header</app-header>
+
+<menu-aside>Chargement du menu</menu-aside>
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <toaster-container [toasterconfig]="toastrConfig"></toaster-container>
+  <section class="content-header">
+    <h1 *ngIf="title">
+      {{title.title}}
+      <small>{{title.description}}</small>
+    </h1>
+    <ol class="breadcrumb">
+      <template ngFor let-lien [ngForOf]="breadcrumb">
+        <li><a href="#" [routerLink]="lien.link" ><i class="fa fa-{{lien.icon}}"></i> {{lien.label}}</a></li>
+      </template>
+    </ol>
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+    <router-outlet></router-outlet>
+    <div class="clearfix"></div>
+  </section><!-- /.content -->
+</div><!-- /.content-wrapper -->
