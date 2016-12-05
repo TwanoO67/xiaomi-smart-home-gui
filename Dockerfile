@@ -16,6 +16,5 @@ RUN ls -al
 #Création de la base
 RUN mkdir -p /mihome/db
 RUN touch /mihome/db/database.db
-RUN node ./logger/createDb.js
 
 CMD [ "node", "./logger/logger.js" ]
