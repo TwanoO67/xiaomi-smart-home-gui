@@ -1,38 +1,62 @@
-<p>
-  home works!
-</p>
-
   <ul class="timeline">
+
+    <template ngFor let-day [ngForOf]="dates" >
 
     <!-- timeline time label -->
     <li class="time-label">
         <span class="bg-red">
-            10 Feb. 2014
+            {{day}}
         </span>
     </li>
     <!-- /.timeline-label -->
 
     <!-- timeline item -->
+    <template ngFor let-log [ngForOf]="log_by_day[day]">
     <li>
-        <!-- timeline icon -->
-        <i class="fa fa-envelope bg-blue"></i>
-        <div class="timeline-item">
-            <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
+        <div *ngIf="log.model == 'motion'">
+          <!-- timeline icon -->
+          <i class="fa fa-user bg-blue"></i>
+          <div class="timeline-item">
+              <span class="time"><i class="fa fa-clock-o"></i> {{log.date}}</span>
 
-            <h3 class="timeline-header"><a href="#">Support Team</a> ...</h3>
+              <h3 class="timeline-header"><a href="#">Mouvement detecté</a> {{log.sid}}</h3>
 
-            <div class="timeline-body">
-                ...
-                Content goes here
-            </div>
+              <div class="timeline-body">
+                  {{log.data}}
+              </div>
 
-            <div class="timeline-footer">
-                <a class="btn btn-primary btn-xs">...</a>
-            </div>
+              <div class="timeline-footer">
+                  <a class="btn btn-primary btn-xs">...</a>
+              </div>
+          </div>
         </div>
-    </li>
-    <!-- END timeline item -->
 
-    ...
+        <div *ngIf="log.model == 'magnet'">
+          <!-- timeline icon -->
+          <i class="fa fa-lock bg-maroon"></i>
+          <div class="timeline-item">
+              <span class="time"><i class="fa fa-clock-o"></i> {{log.date}}</span>
+
+              <h3 class="timeline-header"><a href="#">Ouverture/Fermeture</a> {{log.sid}}</h3>
+
+              <div class="timeline-body">
+                  {{log.data}}
+              </div>
+
+              <div class="timeline-footer">
+                  <a class="btn btn-primary btn-xs">...</a>
+              </div>
+          </div>
+        </div>
+
+    </li>
+  </template>
+  
+  <!-- END timeline item -->
+  <li>
+    <i class="fa fa-clock-o bg-gray"></i>
+  </li>
+
+  </template>
 
 </ul>

@@ -1,14 +1,14 @@
 <!-- Left side column. contains the logo and sidebar -->
 <aside class="main-sidebar">
   <!-- sidebar: style can be found in sidebar.less -->
-  <section class="sidebar" *ngIf="auth.IsAuthenticated()">
+  <section class="sidebar" >
     <!-- Sidebar user panel (optional) -->
     <div class="user-panel">
       <div class="pull-left image">
-        <img [src]="auth.GetUserPicture()" class="img-circle" [alt]="auth.GetUserName()">
+        <img src="/assets/img/avatar.png" class="img-circle" >
       </div>
       <div class="pull-left info">
-        <p>{{auth.GetUserName()}}</p>
+        <p>WEBER Antoine</p>
         <!-- Status -->
         <a href="#"><i class="fa fa-circle text-success" ></i> Online</a>
       </div>

@@ -14,8 +14,6 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { AlertModule, DatepickerModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { ToasterModule } from 'angular2-toaster/angular2-toaster';
-import { Ng2AutoCompleteModule } from "ng2-auto-complete";
-import { DataTableModule } from "angular2-datatable";
 var modules = [
     AlertModule,
     DatepickerModule,
@@ -23,8 +21,6 @@ var modules = [
     FormsModule,
     HttpModule,
     RouterModule,
-    Ng2AutoCompleteModule,
-    DataTableModule,
     ToasterModule
 ];
 import { AppHeaderComponent } from "./widgets/app-header";
@@ -42,43 +38,17 @@ var widgets = [
     TasksBoxComponent,
     UserBoxComponent
 ];
-import { toProduitPipe } from "./pipes/produit";
-import { toPrestationPipe } from "./pipes/prestation";
-var pipes = [
-    toProduitPipe,
-    toPrestationPipe
-];
 import { UserService } from "./services/user.service";
 import { MessagesService } from "./services/messages.service";
-import { BreadcrumbService } from "./services/breadcrumb.service";
-import { TitleService } from "./services/title.service";
-import { FactureService } from "./services/data/facture.service";
-import { ClientService } from "./services/data/client.service";
-import { ProduitService } from "./services/data/produit.service";
-import { PrestationService } from "./services/data/prestation.service";
-import { AchatService } from "./services/data/achat.service";
-import { Configuration } from "./app.constants";
+import { NotificationService } from './services/notification.service';
 var services = [
-    Configuration,
     UserService,
     MessagesService,
-    BreadcrumbService,
-    TitleService,
-    FactureService,
-    ClientService,
-    ProduitService,
-    PrestationService,
-    AchatService
+    NotificationService
 ];
 import { HomeComponent } from './pages/home/home.component';
-import { PageNumComponent } from './pages/page-num/page-num.component';
-import { ClientComponent } from './pages/client/client.component';
-import { ClientEditComponent } from './pages/client/edit/edit';
 var pages = [
     HomeComponent,
-    PageNumComponent,
-    ClientComponent,
-    ClientEditComponent
 ];
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';
@@ -89,7 +59,7 @@ var AppModule = (function () {
 }());
 AppModule = __decorate([
     NgModule({
-        declarations: widgets.concat(pages, pipes),
+        declarations: widgets.concat(pages),
         imports: modules.concat([
             routing
         ]),

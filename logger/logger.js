@@ -12,10 +12,10 @@ var path = require('path');
 var db = new sqlite3.Database(path.join(__dirname, '..', 'db', 'database.db'));
 
 db.serialize(function() {
-  db.run("CREATE TABLE IF NOT EXISTS xiaomi_log (id INTEGER PRIMARY KEY AUTOINCREMENT, date INTEGER, sid TEXT, model TEXT, data TEXT)");
+  db.run("CREATE TABLE IF NOT EXISTS xiaomi_log (id INTEGER PRIMARY KEY AUTOINCREMENT, date INTEGER, sid TEXT, model TEXT, cmd TEXT,data TEXT)");
 });
 
-var stmt = db.prepare("INSERT INTO xiaomi_log (date,sid,model,data) VALUES (?,?,?,?)");
+var stmt = db.prepare("INSERT INTO xiaomi_log (date,sid,model,cmd,data) VALUES (?,?,?,?,?)");
 //db.close();
 
 serverSocket.on('message', function(msg, rinfo){
@@ -27,7 +27,7 @@ serverSocket.on('message', function(msg, rinfo){
     console.log('Unexpected message: %s', msg);
     return;
   }
-
+  stmt.run(Date.now(),json['sid'], model, json['cmd'], json['data']);
   var cmd = json['cmd'];
   if (cmd === 'iam') {
     var address = json['ip'];
@@ -50,7 +50,6 @@ serverSocket.on('message', function(msg, rinfo){
   } else if (cmd === 'read_ack') {
     var model = json['model'];
     var data = JSON.parse(json['data']);
-    stmt.run(Date.now(),json['sid'], model, json['data']);
 
     if (model === 'sensor_ht') {
       var temperature = data['temperature'] ? data['temperature'] / 100.0 : 100;

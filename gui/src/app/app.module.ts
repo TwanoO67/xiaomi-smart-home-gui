@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { AlertModule, DatepickerModule } from 'ng2-bootstrap/ng2-bootstrap';
-import { AngularFireModule, FirebaseAppConfig } from 'angularfire2';
 import {ToasterModule} from 'angular2-toaster/angular2-toaster';
 import { environment } from '../environments/environment';
 
@@ -16,7 +15,6 @@ let modules = [
   FormsModule,
   HttpModule,
   RouterModule,
-  AngularFireModule.initializeApp(environment.firebase),
   ToasterModule
 ];
 
@@ -39,26 +37,18 @@ let widgets = [
 
 import { UserService } from "./services/user.service";
 import { MessagesService } from "./services/messages.service";
-import { AuthService } from "./services/auth.service";
-import { CanActivateGuard } from './services/guard.service';
 import { NotificationService } from './services/notification.service';
 
 let services =  [
   UserService,
   MessagesService,
-  AuthService,
-  CanActivateGuard,
   NotificationService
 ];
 
 import { HomeComponent } from './pages/home/home.component';
-import { PageNumComponent } from './pages/page-num/page-num.component';
-import { ClientComponent } from './pages/client/client.component';
 
 let pages = [
   HomeComponent,
-  PageNumComponent,
-  ClientComponent,
 ]
 
 //main bootstrap
