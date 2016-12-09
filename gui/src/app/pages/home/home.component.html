@@ -1,328 +1,38 @@
-<div class="box box-default" *ngIf="current_step == 1">
-  <div class="box-body">
-    <section class="content-header">
-      <h1>
-        Choix du client
-      </h1>
-      <br/>
-    </section>
+<p>
+  home works!
+</p>
 
-    <b>Client existant</b> : <input class="form-control" *ngIf="liste_clients" ng2-auto-complete
-    blank-option-text="Choisir le client"
-    [(ngModel)]="client"
-    [source]="liste_clients"
-    width="100%"
-    placeholder="Chercher son nom ou prénom"
-    value-property-name="id"
-    display-property-name="fullname"
-    />
-    <button type="button" class="btn btn-success" (click)="validerStep1()"><i class="fa fa-check"></i> OK </button>
+  <ul class="timeline">
 
-    <button type="button" class="btn btn-success pull-right" style="margin-right: 10px" (click)="create()"><i class="fa fa-users"></i> Nouveau Client </button>
-     &nbsp;
-    <button type="button" class="btn btn-danger pull-right" style="margin-right: 10px" (click)="clientAnonyme()"><i class="fa fa-user-secret"></i> Client Anonyme </button>
+    <!-- timeline time label -->
+    <li class="time-label">
+        <span class="bg-red">
+            10 Feb. 2014
+        </span>
+    </li>
+    <!-- /.timeline-label -->
 
-  </div>
-</div>
+    <!-- timeline item -->
+    <li>
+        <!-- timeline icon -->
+        <i class="fa fa-envelope bg-blue"></i>
+        <div class="timeline-item">
+            <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
 
-<div class="box box-default" *ngIf="current_step > 1">
-  <div class="box-body">
-    <section class="content-header">
-      <h1 (click)="goBackStep1()">
-        Client: {{client.fullname}}
-      </h1>
-    </section>
-  </div>
-</div>
+            <h3 class="timeline-header"><a href="#">Support Team</a> ...</h3>
 
-<div class="box box-default" *ngIf="current_step == 2">
-  <div class="box-body">
-    <section class="content-header">
-      <h1>
-        Sélectionner les prestations et produits
-      </h1>
-      <br/>
-    </section>
+            <div class="timeline-body">
+                ...
+                Content goes here
+            </div>
 
-    <div class="box">
-        <br/>
-        &nbsp; <b>Prestations</b> : <input class="form-control" *ngIf="liste_produits" ng2-auto-complete
-        blank-option-text="Choisir la prestation"
-        [(ngModel)]="prestation"
-        [source]="liste_prestations"
-        placeholder="chercher par nom de prestation"
-        value-property-name="id"
-        display-property-name="nom"
-        />
-        <button type="button" class="btn btn-success" (click)="ajouterPresta(prestation.id)"><i class="fa fa-check"></i> OK </button>
-        <br/>
-        <br/>
-        <!-- /.box-header -->
-        <div class="box-body no-padding" *ngIf="getListePresta().length > 0">
-          <table class="table table-striped">
-            <tbody><tr>
-              <th>Nom</th>
-              <th>Quantité</th>
-              <th>Tarif</th>
-              <th>Total</th>
-            </tr>
-            <template ngFor let-achat [ngForOf]="getListePresta()" >
-              <tr>
-                <td>{{ (achat.prestation_id| toPrestation).nom }}</td>
-                <td>
-                  {{achat.quantite}}
-                   &nbsp;
-                  <button type="button" class="btn btn-success btn-sm" (click)="ajouterPresta(achat.prestation_id)"><i class="fa fa-plus"></i> </button>
-                   &nbsp;
-                  <button type="button" class="btn btn-danger btn-sm" (click)="retirerPresta(achat.prestation_id)"><i class="fa fa-minus"></i> </button>
-                </td>
-                  <td>{{ (achat.prestation_id | toPrestation).tarif }}</td>
-                  <td>{{ ( ((achat.prestation_id | toPrestation).tarif | number:'1.0-2') * achat.quantite) | number:'1.0-2' }}</td>
-              </tr>
-          </template>
-          </tbody></table>
+            <div class="timeline-footer">
+                <a class="btn btn-primary btn-xs">...</a>
+            </div>
         </div>
-        <!-- /.box-body -->
-      </div>
+    </li>
+    <!-- END timeline item -->
 
-    <div class="box">
-        <br/>
-        &nbsp; <b>Produits</b> : <input class="form-control" *ngIf="liste_produits" ng2-auto-complete
-        blank-option-text="Choisir le produit"
-        [(ngModel)]="produit"
-        [source]="liste_produits"
-        placeholder="chercher par nom de produit"
-        value-property-name="id"
-        display-property-name="nom"
-        />
-        <button type="button" class="btn btn-success" (click)="ajouterProduit(produit.id)"><i class="fa fa-check"></i> OK </button>
-        <br/>
-        <br/>
-        <!-- /.box-header -->
-        <div class="box-body no-padding" *ngIf="getListeProduit().length > 0">
-          <table class="table table-striped">
-            <tbody><tr>
-              <th>Nom</th>
-              <th>Quantité</th>
-              <th>Tarif</th>
-              <th>Total</th>
-            </tr>
-            <template ngFor let-achat [ngForOf]="getListeProduit()" >
-              <tr>
-                <td>{{ (achat.produit_id | toProduit).nom }}</td>
-                <td>
-                  {{achat.quantite}}
-                   &nbsp;
-                  <button type="button" class="btn btn-success btn-sm" (click)="ajouterProduit(achat.produit_id)"><i class="fa fa-plus"></i> </button>
-                   &nbsp;
-                  <button type="button" class="btn btn-danger btn-sm" (click)="retirerProduit(achat.produit_id)"><i class="fa fa-minus"></i> </button>
-                </td>
-                  <td>{{ (achat.produit_id | toProduit).tarif }}</td>
-                  <td>{{ ( ((achat.produit_id | toProduit).tarif | number:'1.2-2') * achat.quantite) | number:'1.2-2' }}</td>
-              </tr>
-          </template>
-          </tbody></table>
-        </div>
-        <!-- /.box-body -->
-      </div>
+    ...
 
-
-
-    <button type="button" class="btn btn-success" (click)="validerStep2()"><i class="fa fa-check"></i> Valider </button>
-  </div>
-</div>
-
-<div class="box box-default" *ngIf="current_step > 2">
-  <div class="box-body">
-    <section class="content-header">
-      <h1 (click)="goBackStep2()">
-      Prestations et Produits: {{ this.liste_achats.length }}
-      </h1>
-    </section>
-  </div>
-</div>
-
-
-<div class="box box-default" *ngIf="current_step == 3">
-  <div class="box-body">
-
-  <!-- Content Header (Page header) -->
-     <section class="content-header">
-       <h1>
-         Encaissement
-       </h1>
-     </section>
-
-     <!-- Main content -->
-     <section class="invoice">
-       <!-- title row -->
-       <div class="row">
-         <div class="col-xs-12">
-           <h2 class="page-header">
-             <i class="fa fa-globe"></i> C-Coiffure, SARL
-             <small class="pull-right">Date: {{ date.getDate() }}/{{ date.getMonth()+1 }}/{{ date.getFullYear() }}</small>
-           </h2>
-         </div>
-         <!-- /.col -->
-       </div>
-
-       <!-- info row -->
-       <!--div class="row invoice-info">
-         <div class="col-sm-4 invoice-col">
-           De
-           <address>
-             <strong>{{client.fullname}}</strong><br>
-             {{client.adresse}}<br>
-             {{client.ville}}<br>
-             Tel: {{client.telephone}}<br>
-             Email: {{client.email}}
-           </address>
-         </div>
-         <div class="col-sm-4 invoice-col">
-           Pour
-           <address>
-             <strong>C.Coiffure</strong><br>
-              7 Rue de Lyon, <br>
-             67640 Fegersheim<br>
-             Tel: 03 88 68 57 12<br>
-             Email: caro@leciseaudefeg.fr
-           </address>
-         </div>
-         <div class="col-sm-4 invoice-col">
-           <b>Facture #007612</b><br>
-           <br>
-           <b></b><br>
-           <b>Paiement du:</b> {{ date.getDate() }}/{{ date.getMonth()+1 }}/{{ date.getFullYear() }}<br>
-           <b></b>
-         </div>
-       </div-->
-       <!-- /.row -->
-
-       <!-- Table row -->
-       <div class="row">
-         <div class="col-xs-12 table-responsive">
-           <table class="table table-striped">
-             <thead>
-             <tr>
-               <th>Description</th>
-               <th>Quantité</th>
-               <th>Tarif</th>
-               <th>Sous-total</th>
-             </tr>
-             </thead>
-             <tbody>
-                 <template ngFor let-achat [ngForOf]="liste_achats" >
-                   <template [ngIf]="achat.produit_id > 0">
-                     <tr>
-                       <td>{{ (achat.produit_id | toProduit).nom }}</td>
-                       <td>
-                         {{achat.quantite}}
-                        </td>
-                        <td>{{ (achat.produit_id | toProduit).tarif }}</td>
-                        <td>{{ ( ((achat.produit_id | toProduit).tarif | number:'1.0-2') * achat.quantite) | number:'1.2-2' }}</td>
-                     </tr>
-                   </template>
-
-                   <template [ngIf]="achat.prestation_id > 0">
-                     <tr>
-                       <td>{{ (achat.prestation_id | toPrestation).nom }}</td>
-                       <td>
-                         {{achat.quantite}}
-                        </td>
-                        <td>{{ (achat.prestation_id | toPrestation).tarif }}</td>
-                        <td>{{ ( ((achat.prestation_id| toPrestation).tarif | number:'1.0-2') * achat.quantite) | number:'1.2-2' }}</td>
-                     </tr>
-                   </template>
-               </template>
-             </tbody>
-           </table>
-         </div>
-         <!-- /.col -->
-       </div>
-       <!-- /.row -->
-
-       <div class="row">
-         <!-- accepted payments column -->
-         <div class="col-xs-6">
-           <p class="lead">Methode de paiement:</p>
-
-           <template [ngIf]="!cash_selected && !check_selected">
-             <button type="button" class="btn btn-default" (click)="paiementCash()"><i class="fa fa-money"></i> Cash</button>
-             <button type="button" class="btn btn-default" (click)="paiementCheck()"><i class="fa fa-bank"></i> Chéque</button>
-           </template>
-
-           <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;" *ngIf="cash_selected">
-             Paiement en cash <button type="button" class="btn btn-danger btn-sm pull-right" (click)="cancelPaiement()"><i class="fa fa-cross"></i> Changer de paiement </button>
-             <br/>
-             <b>Monnaie donnée par le client:</b><input type="text" class="form-control" [(ngModel)]="cash" />
-             <template [ngIf]="cash > 0" >
-               <b>Monnaie à rendre:</b><br/>
-               <template [ngIf]="cash > calcTotal()" >
-                {{ ( cash - calcTotal() ) | number : '1.2-2' }} €
-               </template>
-               <template [ngIf]="cash < calcTotal()" >
-                Pas assez de monnaie
-               </template>
-            </template>
-           </p>
-
-           <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;" *ngIf="check_selected">
-             Paiement en chéque <button type="button" class="btn btn-danger btn-sm pull-right" (click)="cancelPaiement()"><i class="fa fa-cross"></i> Changer de paiement </button>
-             <br/>
-             <b> Ordre: </b>C Coiffure<br/>
-             <b> SIRET:</b>	502 855 539 000 16
-           </p>
-         </div>
-         <!-- /.col -->
-         <div class="col-xs-6">
-           <p class="lead">Calcul</p>
-
-           <div class="table-responsive">
-             <table class="table">
-               <!--tr>
-                 <th style="width:50%">Total HT:</th>
-                 <td>{{(calcTotal() * 0.804 ) | number : "1.2-2"}} €</td>
-               </tr>
-               <tr>
-                 <th>Tax (19,6%)</th>
-                 <td>{{(calcTotal() * 0.196 ) | number : "1.2-2"}} €</td>
-               </tr-->
-               <tr>
-                 <th>Total des achats:</th>
-                 <td>{{ totalDesAchats() | number : "1.2-2" }} € </td>
-               </tr>
-               <tr>
-                 <th>Réduction:</th>
-                 <td>{{ calcReduction() | number : "1.2-2" }} €
-                   <button type="button" class="btn btn-danger btn-sm" (click)="noReduction()" *ngIf="use_reduc" ><i class="fa fa-cross"></i> Supprimer</button>
-                   <button type="button" class="btn btn-success btn-sm" (click)="useReduction()" *ngIf="!use_reduc" ><i class="fa fa-cross"></i> Reduction</button>
-                 </td>
-               </tr>
-               <tr>
-                 <th>Total:</th>
-                 <td>{{calcTotal() | number : "1.2-2"}} €</td>
-               </tr>
-             </table>
-           </div>
-         </div>
-         <!-- /.col -->
-       </div>
-       <!-- /.row -->
-
-       <!-- this row will not appear when printing -->
-       <div class="row no-print">
-         <div class="col-xs-12">
-           <!--a href="invoice-print.html" target="_blank" class="btn btn-default"><i class="fa fa-print"></i> Print</a-->
-           <button type="button" class="btn btn-success pull-right" (click)="saveFacture()" ><i class="fa fa-credit-card"></i> Enregistrer
-           </button>
-           <!--button type="button" class="btn btn-primary pull-right" style="margin-right: 5px;">
-             <i class="fa fa-download"></i> Generate PDF
-           </button-->
-         </div>
-       </div>
-     </section>
-     <!-- /.content -->
-
-
-   </div>
-   </div>
+</ul>

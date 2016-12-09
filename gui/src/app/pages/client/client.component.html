@@ -1,55 +1,25 @@
-<div class="box box-default">
-  <div class="box-body">
-      <button type="button" class="btn btn-success" style="margin-right: 10px" (click)="create()"><i class="fa fa-user"></i> Ajouter un nouveau client</button>
-      <table class="table table-striped" [mfData]="data" #mf="mfDataTable" [mfRowsOnPage]="15">
-        <thead>
-        <tr>
-            <th >
-                <mfDefaultSorter by="prenom">Prenom</mfDefaultSorter>
-            </th>
-            <th >
-                <mfDefaultSorter by="nom">Nom</mfDefaultSorter>
-            </th>
-            <th >
-                <mfDefaultSorter by="email">Email</mfDefaultSorter>
-            </th>
-            <th >
-                Actions
-            </th>
-            <!--th style="width: 20%">
-                <mfDefaultSorter by="city">City</mfDefaultSorter>
-            </th-->
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let item of mf.data">
-            <td>{{item.prenom}}</td>
-            <td>{{item.nom}}</td>
-            <td>{{item.email}}</td>
-            <td>
-              <button type="button" class="btn btn-default btn-sm" style="margin-right: 10px" (click)="edit(item)">Editer</button>
-              <button type="button" class="btn btn-danger btn-sm" style="margin-right: 10px" (click)="delete(item)">Supprimer</button>
-            </td>
-            <!--td class="text-right">{{item.age}}</td>
-            <td>{{item.city | uppercase}}</td-->
-        </tr>
-        </tbody>
-        <tfoot>
-        <tr>
-            <td colspan="4">
-                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]"></mfBootstrapPaginator>
-            </td>
-        </tr>
-        </tfoot>
-    </table>
-
-     <div class="pad margin no-print">
-       <div class="callout callout-info" style="margin-bottom: 0!important;">
-         <h4><i class="fa fa-info"></i> Aide:</h4>
-         Cette page fait le listing de tout vos clients.<br/>
-         Vous pouvez éditer et créer de nouveaux client ici.
-       </div>
-     </div>
-
-   </div>
+<div class="row">
+    <div class="col-md-12" style="margin-bottom: 10px;">
+        <button class="btn btn-success pull-right" (click)="add()"><i class="fa fa-plus"></i> Add Client</button>
+    </div>
+    <div class="col-md-3" *ngFor='let client of clients | async'>
+        <div class="well">
+            <form>
+                <div class="form-group">
+                    <label for="id">Id</label>
+                    <input type="text" disabled="disabled" [(ngModel)]="client.clientId" name="clientId" class="form-control" id="id" required>
+                </div>
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" (keyup.enter)="save(client)" [(ngModel)]="client.name" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <input type="text" class="form-control" (keyup.enter)="save(client)" [(ngModel)]="client.address" name="address" id="address">
+                </div>
+                <button type="button" class="btn btn-primary" (click)="save(client)">Save</button>
+                <button type="button" class="btn btn-danger" (click)="delete(client)">Delete</button>
+            </form>
+        </div>
+    </div>
 </div>

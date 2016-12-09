@@ -1,20 +1,19 @@
 <!-- Left side column. contains the logo and sidebar -->
 <aside class="main-sidebar">
-
   <!-- sidebar: style can be found in sidebar.less -->
-  <section class="sidebar">
-
+  <section class="sidebar" *ngIf="auth.IsAuthenticated()">
     <!-- Sidebar user panel (optional) -->
-    <!-- <div class="user-panel">
+    <div class="user-panel">
       <div class="pull-left image">
-        <img [src]="current_user.avatar_url" class="img-circle" [alt]="current_user.getName()">
+        <img [src]="auth.GetUserPicture()" class="img-circle" [alt]="auth.GetUserName()">
       </div>
       <div class="pull-left info">
-        <p>{{current_user.getName()}}</p>
+        <p>{{auth.GetUserName()}}</p>
+        <!-- Status -->
         <a href="#"><i class="fa fa-circle text-success" ></i> Online</a>
       </div>
     </div>
-
+    <!-- search form (Optional) -->
     <form action="#" method="get" class="sidebar-form">
       <div class="input-group">
         <input type="text" name="q" class="form-control" placeholder="Search...">
@@ -22,16 +21,19 @@
           <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
         </span>
       </div>
-    </form> -->
-
+    </form>
+    <!-- /.search form -->
     <!-- Sidebar Menu -->
     <ul class="sidebar-menu">
       <li class="header">NAVIGATION</li>
-
       <template ngFor let-item [ngForOf]="links" >
         <template [ngIf]="!item.sublinks">
           <li [class.active]="item.link[0] === current_url" >
-            <a [routerLink]="item.link">
+            <a *ngIf="!item.external" [routerLink]="item.link">
+              <i class="fa fa-{{item.icon}}"></i>
+              <span>{{item.title}}</span>
+            </a>
+            <a *ngIf="item.external" [href]="item.link" [target]="item.target">
               <i class="fa fa-{{item.icon}}"></i>
               <span>{{item.title}}</span>
             </a>
@@ -47,20 +49,20 @@
             <ul class="treeview-menu">
               <template ngFor let-subitem [ngForOf]="item.sublinks" >
               <li [class.active]="subitem.link[0] === current_url">
-                <a [routerLink]="subitem.link">
+                <a *ngIf="!subitem.external" [routerLink]="subitem.link">
                   <i *ngIf="subitem.icon" class="fa fa-{{subitem.icon}}"></i>
                   <span>{{subitem.title}}</span>
-
                 </a>
-
+                <a *ngIf="subitem.external" [href]="subitem.link" [target]="subitem.target">
+                  <i *ngIf="subitem.icon" class="fa fa-{{subitem.icon}}"></i>
+                  <span>{{subitem.title}}</span>
+                </a>
               </li>
               </template>
             </ul>
           </li>
         </template>
       </template>
-      <!-- Optionally, you can add icons to the links -->
-
     </ul><!-- /.sidebar-menu -->
   </section>
   <!-- /.sidebar -->

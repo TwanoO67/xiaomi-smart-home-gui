@@ -1,37 +1,27 @@
-import { Component, OnInit } from '@angular/core';
-import {User} from "../../models/user";
-import {Router} from "@angular/router";
-import {UserService} from "../../services/user.service";
+import { Component, OnInit }  from '@angular/core';
+import { User }               from "../../models/user";
+import { Router }             from "@angular/router";
+import { UserService }        from "../../services/user.service";
+import { AuthService }        from "../../services/auth.service";
 
 @Component({
   selector: 'menu-aside',
-  templateUrl: 'menu-aside.component.html',
-  styleUrls: ['menu-aside.component.css']
+  templateUrl: './menu-aside.component.html',
+  styleUrls: ['./menu-aside.component.css']
 })
 export class MenuAsideComponent implements OnInit {
-  private current_user: User;
   private current_url: string;
   private links: Array<any> = [
     {
-      "title": "Caisse",
-      "icon": "shopping-cart",
+      "title": "Home",
+      "icon": "dashboard",
       "link": ['/']
     },
     {
-      "title": "Clients",
-      "icon": "users",
+      "title": "Client",
+      "icon": "usd",
       "link": ['/client']
     },
-    {
-      "title": "Produits",
-      "icon": "eyedropper",
-      "link": ['/produits']
-    },
-    {
-      "title": "Prestations",
-      "icon": "hand-scissors-o",
-      "link": ['/prestations']
-    }/*,
     {
       "title": "Sub menu",
       "icon": "link",
@@ -45,20 +35,43 @@ export class MenuAsideComponent implements OnInit {
           "link": ['/page/3'],
         }
       ]
-    }*/
+    },
+    {
+      "title": "External Link",
+      "icon": "google",
+      "link": ['http://google.com'],
+      "external": true,
+      "target": "_blank"
+    },
+    {
+      "title": "External Links",
+      "icon": "link",
+      "sublinks": [
+        {
+          "title": "Github",
+          "link": ['http://github.com'],
+          "icon": "github",
+          "external": true,
+          "target": "_blank"
+        },
+        {
+          "title": "Yahoo",
+          "link": ['http://yahoo.com'],
+          "icon": "yahoo",
+          "external": true,
+          "target": "_blank"
+        }
+      ]
+    }
   ];
 
-  constructor(
-    private _user_serv : UserService,
-    public router: Router ){
+  constructor(private _user_serv : UserService, public router: Router, private auth: AuthService){
     //recuperation de l'url courrante
     this.router.events.subscribe((evt) => this.current_url = evt.url );
-
-    //se connecter au modification du user courant
-    this._user_serv.current_user.subscribe((user: User) => this.current_user = user);
-
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    
+  }
 
 }

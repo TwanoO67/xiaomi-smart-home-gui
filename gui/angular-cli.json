@@ -1,13 +1,13 @@
 {
   "project": {
-    "version": "1.0.0-beta.14",
+    "version": "1.0.0-beta.17",
     "name": "ng2-admin-lte"
   },
   "apps": [
     {
       "root": "src",
       "outDir": "dist",
-      "assets": ["public"],
+      "assets": "public",
       "index": "index.html",
       "main": "main.ts",
       "test": "test.ts",
@@ -31,6 +31,16 @@
   ],
   "addons": [],
   "packages": [],
+  "e2e": {
+    "protractor": {
+      "config": "./protractor.conf.js"
+    }
+  },
+  "test": {
+    "karma": {
+      "config": "./karma.conf.js"
+    }
+  },
   "defaults": {
     "styleExt": "css",
     "prefixInterfaces": false

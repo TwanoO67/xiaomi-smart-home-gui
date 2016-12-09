@@ -1,13 +1,16 @@
 export class User{
-  public id: number;
   public firstname:string;
   public lastname:string;
   public email:string;
   public avatar_url:string;
   public creation_date: string;
 
-  constructor(tab:any = {}){
-    Object.assign(this, tab);
+  public constructor(data:any = {}) {
+    this.firstname = data.firstname || "";
+    this.lastname = data.lastname || "";
+    this.email = data.email || "";
+    this.avatar_url = data.avatar_url || "";
+    this.creation_date = data.creation_date || Date.now();
   }
 
   public getName(){
