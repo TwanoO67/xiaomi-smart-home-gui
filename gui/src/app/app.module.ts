@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { AlertModule, DatepickerModule } from 'ng2-bootstrap/ng2-bootstrap';
-import {ToasterModule} from 'angular2-toaster/angular2-toaster';
+import { ToasterModule } from 'angular2-toaster/angular2-toaster';
 import { environment } from '../environments/environment';
 
 let modules = [
@@ -23,7 +23,8 @@ import { MenuAsideComponent } from "./widgets/menu-aside";
 import { MessagesBoxComponent} from "./widgets/messages-box";
 import { NotificationBoxComponent } from "./widgets/notification-box";
 import { TasksBoxComponent } from "./widgets/tasks-box";
-import { UserBoxComponent } from "./widgets/user-box"
+import { UserBoxComponent } from "./widgets/user-box";
+import { BreadcrumbComponent } from "./widgets/breadcrumb";
 
 let widgets = [
   AppComponent,
@@ -32,13 +33,15 @@ let widgets = [
   MessagesBoxComponent,
   NotificationBoxComponent,
   TasksBoxComponent,
-  UserBoxComponent
+  UserBoxComponent,
+  BreadcrumbComponent
 ];
 
 import { UserService } from "./services/user.service";
 import { MessagesService } from "./services/messages.service";
 import { NotificationService } from './services/notification.service';
 import { DeviceService } from "./services/data/device.service";
+import { BreadcrumbService } from "./services/breadcrumb.service";
 import { Configuration } from "./app.constants";
 
 let services =  [
@@ -46,6 +49,7 @@ let services =  [
   UserService,
   MessagesService,
   NotificationService,
+  BreadcrumbService,
   DeviceService
 ];
 

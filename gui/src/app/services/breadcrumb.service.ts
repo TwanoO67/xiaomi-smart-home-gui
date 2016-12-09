@@ -4,13 +4,18 @@ import { ReplaySubject } from "rxjs";
 @Injectable()
 export class BreadcrumbService {
   public current: ReplaySubject<any>;
-  private initialData : any = [
-    {
-      label: "C-Coiffure",
-      link: "/",
-      icon: "dashboard"
-    }
-  ]
+  private initialData : any = {
+    display: false,
+    header : "",
+    description: "",
+    levels: [
+      {
+        title: "Timeline",
+        link: "/",
+        icon: "clock-o"
+      }
+    ]
+  };
 
   constructor() {
     this.current = new ReplaySubject(1);

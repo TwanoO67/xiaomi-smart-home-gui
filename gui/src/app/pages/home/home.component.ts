@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { XiaomiLog } from "../../models/xiaomi_log";
+import { BreadcrumbService } from "../../services/breadcrumb.service";
 
 @Component({
   selector: 'app-home',
@@ -13,7 +14,7 @@ export class HomeComponent implements OnInit {
   public log_by_day: any;
   public dates : Array<string> = [];
 
-  constructor() {
+  constructor(private _bread_serv: BreadcrumbService) {
   //donnée de test
   this.last_log = [
     new XiaomiLog({
@@ -41,6 +42,19 @@ export class HomeComponent implements OnInit {
 }
 
   ngOnInit() {
+    //on place le header
+    this._bread_serv.set({
+      display: false,
+      header : "Timeline",
+      description: "Activité de la maison",
+      levels: [
+        {
+          title: "Timeline",
+          link: "/",
+          icon: "clock-o"
+        }
+      ]
+    });
     //tri des données par jours
     this.log_by_day = {};
     console.log(this.last_log);
@@ -55,6 +69,10 @@ export class HomeComponent implements OnInit {
     console.log(this.log_by_day);
     //this.dates = this.dates.unique();
 
+  }
+
+  ngOnDestroy(){
+    this._bread_serv.clear();
   }
 
 }

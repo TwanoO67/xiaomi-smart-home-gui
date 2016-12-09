@@ -29,6 +29,7 @@ import { MessagesBoxComponent } from "./widgets/messages-box";
 import { NotificationBoxComponent } from "./widgets/notification-box";
 import { TasksBoxComponent } from "./widgets/tasks-box";
 import { UserBoxComponent } from "./widgets/user-box";
+import { BreadcrumbComponent } from "./widgets/breadcrumb";
 var widgets = [
     AppComponent,
     AppHeaderComponent,
@@ -36,7 +37,8 @@ var widgets = [
     MessagesBoxComponent,
     NotificationBoxComponent,
     TasksBoxComponent,
-    UserBoxComponent
+    UserBoxComponent,
+    BreadcrumbComponent
 ];
 import { UserService } from "./services/user.service";
 import { MessagesService } from "./services/messages.service";
