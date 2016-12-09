@@ -9,8 +9,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 import { Component } from '@angular/core';
 import { XiaomiLog } from "../../models/xiaomi_log";
+import { BreadcrumbService } from "../../services/breadcrumb.service";
 var HomeComponent = (function () {
-    function HomeComponent() {
+    function HomeComponent(_bread_serv) {
+        this._bread_serv = _bread_serv;
         this.date = new Date();
         this.last_log = [];
         this.dates = [];
@@ -40,6 +42,18 @@ var HomeComponent = (function () {
     }
     HomeComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this._bread_serv.set({
+            display: false,
+            header: "Timeline",
+            description: "Activité de la maison",
+            levels: [
+                {
+                    title: "Timeline",
+                    link: "/",
+                    icon: "clock-o"
+                }
+            ]
+        });
         this.log_by_day = {};
         console.log(this.last_log);
         this.last_log.forEach(function (log) {
@@ -52,6 +66,9 @@ var HomeComponent = (function () {
         });
         console.log(this.log_by_day);
     };
+    HomeComponent.prototype.ngOnDestroy = function () {
+        this._bread_serv.clear();
+    };
     return HomeComponent;
 }());
 HomeComponent = __decorate([
@@ -60,7 +77,7 @@ HomeComponent = __decorate([
         templateUrl: './home.component.html',
         styleUrls: ['./home.component.css']
     }),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [BreadcrumbService])
 ], HomeComponent);
 export { HomeComponent };
 //# sourceMappingURL=../../../../../src/app/pages/home/home.component.js.map

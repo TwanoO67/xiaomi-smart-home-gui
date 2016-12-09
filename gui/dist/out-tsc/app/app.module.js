@@ -44,12 +44,14 @@ import { UserService } from "./services/user.service";
 import { MessagesService } from "./services/messages.service";
 import { NotificationService } from './services/notification.service';
 import { DeviceService } from "./services/data/device.service";
+import { BreadcrumbService } from "./services/breadcrumb.service";
 import { Configuration } from "./app.constants";
 var services = [
     Configuration,
     UserService,
     MessagesService,
     NotificationService,
+    BreadcrumbService,
     DeviceService
 ];
 import { HomeComponent } from './pages/home/home.component';
