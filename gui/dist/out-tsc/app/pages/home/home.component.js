@@ -20,21 +20,21 @@ var HomeComponent = (function () {
                 date: 1481282539000,
                 sid: 4321,
                 model: "motion",
-                data: "{status: 'motion'}"
+                data: '{"status": "motion"}'
             }),
             new XiaomiLog({
                 id: 2,
                 date: 1481289876000,
                 sid: 1234,
                 model: "motion",
-                data: "{status: 'motion'}"
+                data: '{"status": "motion"}'
             }),
             new XiaomiLog({
                 id: 3,
                 date: 1241289876000,
                 sid: 3456,
                 model: "magnet",
-                data: "{status: 'close'}"
+                data: '{"status": "close"}'
             })
         ];
     }

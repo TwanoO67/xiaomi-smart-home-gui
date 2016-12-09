@@ -17,17 +17,17 @@ export class DeviceService extends RestService {
     public fake = {
       4321: {
         id:4321,
-        name: "Cuisine",
+        name: "Detecteur Cuisine",
         model: "motion"
       },
       1234: {
         id:1234,
-        name: "Couloir",
+        name: "Detecteur Couloir",
         model: "motion"
       },
       3456: {
         id:3456,
-        name: "Entrée",
+        name: "Porte d'entrée",
         model: "magnet"
       }
     };
