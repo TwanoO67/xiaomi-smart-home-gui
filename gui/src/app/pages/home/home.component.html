@@ -13,13 +13,13 @@
     <!-- timeline item -->
     <template ngFor let-log [ngForOf]="log_by_day[day]">
     <li>
-        <div *ngIf="log.model == 'motion'">
+        <template [ngIf]="log.model == 'motion'">
           <!-- timeline icon -->
           <i class="fa fa-user bg-blue"></i>
           <div class="timeline-item">
               <span class="time"><i class="fa fa-clock-o"></i> {{log.date}}</span>
 
-              <h3 class="timeline-header"><a href="#">Mouvement detecté</a> {{log.sid}}</h3>
+              <h3 class="timeline-header"><a href="#">Mouvement detecté</a> {{(log.sid | toDevice).name }}</h3>
 
               <div class="timeline-body">
                   {{log.data}}
@@ -29,15 +29,15 @@
                   <a class="btn btn-primary btn-xs">...</a>
               </div>
           </div>
-        </div>
+        </template>
 
-        <div *ngIf="log.model == 'magnet'">
+        <template [ngIf]="log.model == 'magnet'">
           <!-- timeline icon -->
           <i class="fa fa-lock bg-maroon"></i>
           <div class="timeline-item">
               <span class="time"><i class="fa fa-clock-o"></i> {{log.date}}</span>
 
-              <h3 class="timeline-header"><a href="#">Ouverture/Fermeture</a> {{log.sid}}</h3>
+              <h3 class="timeline-header"><a href="#">Ouverture/Fermeture</a> {{(log.sid | toDevice).name }}</h3>
 
               <div class="timeline-body">
                   {{log.data}}
@@ -47,16 +47,18 @@
                   <a class="btn btn-primary btn-xs">...</a>
               </div>
           </div>
-        </div>
+        </template>
 
     </li>
+    <!-- fin d'une entrée -->
   </template>
-  
+
+
+  <!-- fin d'un jour -->
+  </template>
   <!-- END timeline item -->
   <li>
     <i class="fa fa-clock-o bg-gray"></i>
   </li>
-
-  </template>
 
 </ul>

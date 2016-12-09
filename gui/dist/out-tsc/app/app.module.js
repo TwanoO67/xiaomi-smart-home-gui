@@ -41,14 +41,22 @@ var widgets = [
 import { UserService } from "./services/user.service";
 import { MessagesService } from "./services/messages.service";
 import { NotificationService } from './services/notification.service';
+import { DeviceService } from "./services/data/device.service";
+import { Configuration } from "./app.constants";
 var services = [
+    Configuration,
     UserService,
     MessagesService,
-    NotificationService
+    NotificationService,
+    DeviceService
 ];
 import { HomeComponent } from './pages/home/home.component';
 var pages = [
     HomeComponent,
+];
+import { toDevicePipe } from "./pipes/device";
+var pipes = [
+    toDevicePipe
 ];
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';
@@ -59,7 +67,7 @@ var AppModule = (function () {
 }());
 AppModule = __decorate([
     NgModule({
-        declarations: widgets.concat(pages),
+        declarations: widgets.concat(pages, pipes),
         imports: modules.concat([
             routing
         ]),

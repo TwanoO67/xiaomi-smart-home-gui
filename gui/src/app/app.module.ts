@@ -38,17 +38,27 @@ let widgets = [
 import { UserService } from "./services/user.service";
 import { MessagesService } from "./services/messages.service";
 import { NotificationService } from './services/notification.service';
+import { DeviceService } from "./services/data/device.service";
+import { Configuration } from "./app.constants";
 
 let services =  [
+  Configuration,
   UserService,
   MessagesService,
-  NotificationService
+  NotificationService,
+  DeviceService
 ];
 
 import { HomeComponent } from './pages/home/home.component';
 
 let pages = [
   HomeComponent,
+]
+
+import { toDevicePipe } from "./pipes/device";
+
+let pipes = [
+  toDevicePipe
 ]
 
 //main bootstrap
@@ -58,7 +68,8 @@ import { routing } from './app.routes';
 @NgModule({
   declarations: [
     ...widgets,
-    ...pages
+    ...pages,
+    ...pipes
   ],
   imports: [
     ...modules,

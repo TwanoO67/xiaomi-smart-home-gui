@@ -44,7 +44,7 @@ var HomeComponent = (function () {
         console.log(this.last_log);
         this.last_log.forEach(function (log) {
             var date = new Date(log.date);
-            var day = date.getDate() + " " + (date.getMonth() + 1) + " " + date.getFullYear();
+            var day = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
             if (typeof _this.log_by_day[day] === "undefined")
                 _this.log_by_day[day] = [];
             _this.log_by_day[day].push(log);

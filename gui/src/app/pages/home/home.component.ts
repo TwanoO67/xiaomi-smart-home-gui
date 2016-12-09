@@ -46,7 +46,7 @@ export class HomeComponent implements OnInit {
     console.log(this.last_log);
     this.last_log.forEach((log)=>{
       let date: Date = new Date(log.date);
-      let day = date.getDate()+" "+(date.getMonth()+1)+" "+date.getFullYear();
+      let day = date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear();
       if(typeof this.log_by_day[day] === "undefined")
         this.log_by_day[day] = [];
       this.log_by_day[day].push(log);
