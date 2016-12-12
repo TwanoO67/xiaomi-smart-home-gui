@@ -17,4 +17,14 @@ RUN ls -al
 RUN mkdir -p /mihome/db
 RUN touch /mihome/db/database.db
 
+RUN cd gui
+RUN npm install
+RUN npm run prod
+
+RUN cd ..
+
 CMD [ "node", "./logger/logger.js" ]
+CMD [ "node", "./gui/server.js" ]
+
+EXPOSE 1337
+VOLUME ["/mihome/db"]
