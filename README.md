@@ -17,6 +17,12 @@ lancement du logger
 3) L'API donne accés depuis un service REST en php au contenu de la base SQLite
 4) Le GUI en angular2 (fork de ng2-admin-lte) offre une visualisation de ces données (WAF friendly)
 
+## Observation
+La detection de mouvement est trés rapide (ordre de la seconde)
+par contre la detection de la fin du mouvement ne génére un evenement report qu'au bout d'1min
+
+Le clic et double-clic sur un bouton sont rapide (ordre de la seconde)
+
 ## Source
 Logger: fork de [homebridge-aquara](https://github.com/snOOrz/homebridge-aqara)
 API: fork de [mevdschee/php-crud-api](https://github.com/mevdschee/php-crud-api) et de [alexpls/cart_rest_example](https://github.com/alexpls/cart_rest_example)

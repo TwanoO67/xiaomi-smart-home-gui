@@ -12,21 +12,21 @@ var path = require('path');
 var db = new sqlite3.Database(path.join(__dirname, '..', 'db', 'database.db'));
 
 db.serialize(function() {
-  db.run("CREATE TABLE IF NOT EXISTS xiaomi_log (id INTEGER PRIMARY KEY AUTOINCREMENT, date INTEGER, sid TEXT, model TEXT, cmd TEXT,data TEXT)");
+  db.run("CREATE TABLE IF NOT EXISTS xiaomi_event (id INTEGER PRIMARY KEY AUTOINCREMENT, date INTEGER, sid TEXT, model TEXT, cmd TEXT,data TEXT)");
   db.run("CREATE TABLE IF NOT EXISTS xiaomi_device (sid TEXT PRIMARY KEY, name TEXT, model TEXT)");
-  db.run("CREATE TABLE IF NOT EXISTS xiaomi_heartbeat (id INTEGER PRIMARY KEY AUTOINCREMENT, sid TEXT, model TEXT, is_last_state INTEGER, data TEXT, interval_begin_date INTEGER, interval_end_date INTEGER, last_hb_date INTEGER)");
+  db.run("CREATE TABLE IF NOT EXISTS xiaomi_heartbeat (id INTEGER PRIMARY KEY AUTOINCREMENT, sid TEXT, model TEXT, is_last_state INTEGER, data TEXT, interval_begin_date INTEGER, interval_end_date INTEGER, last_heartbeat_date INTEGER)");
 });
 
-var log_insert = db.prepare("INSERT INTO xiaomi_log (date,sid,model,cmd,data) VALUES (?,?,?,?,?)");
+var event_log_insert = db.prepare("INSERT INTO xiaomi_event (date,sid,model,cmd,data) VALUES (?,?,?,?,?)");
 var device_insert = db.prepare("INSERT OR IGNORE INTO xiaomi_device (sid,name,model) VALUES (?,?,?)");
 var device_update_model = db.prepare("UPDATE xiaomi_device SET model = ? WHERE sid = ?");
-var interval_begin = db.prepare("INSERT INTO xiaomi_heartbeat (sid,model,data,interval_begin_date,last_hb_date,is_last_state) VALUES (?,?,?,?,?,1)");
-var interval_update_hb = db.prepare("UPDATE xiaomi_heartbeat SET last_hb_date=? WHERE id=?");
-var interval_end = db.prepare("UPDATE xiaomi_heartbeat SET last_hb_date=?, interval_end_date=?, is_last_state=0 WHERE id=? ");
+var interval_begin = db.prepare("INSERT INTO xiaomi_heartbeat (sid,model,data,interval_begin_date,last_heartbeat_date,is_last_state) VALUES (?,?,?,?,?,1)");
+var interval_update_hb = db.prepare("UPDATE xiaomi_heartbeat SET last_heartbeat_date=? WHERE id=?");
+var interval_end = db.prepare("UPDATE xiaomi_heartbeat SET last_heartbeat_date=?, interval_end_date=?, is_last_state=0 WHERE id=? ");
 //db.close();
 
 //interprete les log en fonctions du type
-function logDecode(json){
+function printLog(json){
   var model = json['model'];
   var data = JSON.parse(json['data']);
   if (model === 'sensor_ht') {
@@ -54,13 +54,23 @@ function sendWhois() {
   console.log('Step 2. Send %s to a multicast address %s:%d.', cmd, multicastAddress, multicastPort);
 }
 
-function updateInterval(json){
+function popInterestingEvent(json){
+  //TODO
+
+  //ici il faudra faire les actions !!! verification de scenario etc...
+
+  event_log_insert.run(Date.now(),json['sid'], json['model'], json['cmd'], json['data']);
+}
+
+function updateState(json){
   //ici on retire certain event, nottament les button (on ne veut pas suivre les periodes de non-appuie..)
-  if(json['model'] === "switch"){
+  if(json['model'] === "switch" && json['data'] !== "{}"){
+    popInterestingEvent(json);
     return true;
   }
 
   db.all(" SELECT * from xiaomi_heartbeat WHERE sid = '"+json['sid']+"' AND is_last_state = 1 ", function(err, rows) {
+      var now = Date.now();//on fixe la microseconde
       if(err){
         console.error(err);
         exit;
@@ -68,21 +78,25 @@ function updateInterval(json){
       //si aucune ligne
       if(rows.length == 0){
         //on crée un nouvel interval
-        interval_begin.run(json['sid'],json['model'],json['data'],Date.now(),Date.now());
+        interval_begin.run(json['sid'],json['model'],json['data'],now,now);
       }
       //si on a deja une ligne
       else{
         //on verifie si data sont les memes
         var row = rows[0];
         if(row.data === json['data']){
-          //si oui on update la date de last_hb_date
-          interval_update_hb.run(Date.now(),row.id);
+          //si oui on update la date de last_heartbeat_date
+          interval_update_hb.run(now,row.id);
         }
+        //si non
         else{
-          //si non on ferme l'interv
-          interval_end.run(Date.now(),Date.now(),row.id);
+          //on pop un event (le changement d'etat)
+          popInterestingEvent(json);
+          //on ferme l'interval
+          interval_end.run(now,now,row.id);
           //puis on crée un nouveau avec les new data
-          interval_begin.run(json['sid'],json['model'],json['data'],Date.now(),Date.now());
+          interval_begin.run(json['sid'],json['model'],json['data'],now,now);
+
         }
       }
   });
@@ -105,6 +119,7 @@ serverSocket.on('message', function(msg, rinfo){
   if (cmd === 'iam') {
     var address = json['ip'];
     var port = json['port'];
+    //on lui demande la liste de ses devices
     var cmd = '{"cmd":"get_id_list"}';
     device_insert.run(json['sid'],"Unknown Gateway","gateway");
     console.log('Step 3. Send %s to %s:%d', cmd, address, port);
@@ -128,27 +143,15 @@ serverSocket.on('message', function(msg, rinfo){
       serverSocket.send(response, 0, response.length, rinfo.port, rinfo.address);
     }
   }
-  //on recoi l'etat d'une device
-  else if (cmd === 'read_ack') {
-    log_insert.run(Date.now(),json['sid'], json['model'], json['cmd'], json['data']);
-    device_update_model.run(json['model'],json['sid']);
-    updateInterval(json);
-    logDecode(json);
-  }
-  //on recoit une action push
-  else if (cmd === 'report') {
-    log_insert.run(Date.now(),json['sid'], json['model'], json['cmd'], json['data']);
+  //on recoi l'etat d'une device par demande du logger, un push, ou un ping
+  else if (cmd === 'read_ack' || cmd === 'report' || cmd === 'heartbeat') {
+    if (cmd === 'read_ack') {
+      //on update ici le model des devices car on a demandé un etat des lieux
+      device_update_model.run(json['model'],json['sid']);
+    }
     //necessaire pour le motion (entre autre), mais a eviter pour le button
-    updateInterval(json);
-    //ici il faudra verifier si on doit executer des scenarios
-    logDecode(json);
-  }
-  //on recoit une action type ping
-  else if (cmd === 'heartbeat') {
-    var model = json['model'];
-    var data = JSON.parse(json['data']);
-    updateInterval(json);
-    logDecode(json);
+    updateState(json);
+    printLog(json);
   }
   //ici on se sert du logger pour passer des command a la gateway correspondant au bon sid
   else if (cmd === 'write') {
@@ -161,8 +164,8 @@ serverSocket.on('message', function(msg, rinfo){
     }
   } else {
     console.log('recv %s(%d bytes) from client %s:%d\n', msg, msg.length, rinfo.address, rinfo.port);
-    //on l'insere quand meme dans la base de log...
-    log_insert.run(Date.now(),json['sid'], json['model'], json['cmd'], json['data']);
+    //on l'insere quand meme dans la base des event log...
+    popInterestingEvent(json);
   }
 });
 
