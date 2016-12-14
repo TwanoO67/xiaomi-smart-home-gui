@@ -1,23 +1,26 @@
 {
-  "name": "homebridge-aqara",
-  "version": "0.1.4",
-  "description": "Aqara plugin for homebridge: https://github.com/nfarina/homebridge",
-  "license": "ISC",
+  "name": "xiaomi-smart-home-gui",
+  "version": "0.1.0",
+  "description": "Logger, Api and Gui for Xiaomi Smart Home (& friends ..)",
+  "license": "DWTFYW",
   "keywords": [
-    "homebridge-plugin"
+    "xiaomi",
+    "smart",
+    "home"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/snOOrz/homebridge-aqara"
+    "url": "https://github.com/TwanoO67/xiaomi-smart-home-gui"
   },
   "bugs": {
-    "url": "https://github.com/snOOrz/homebridge-aqara/issues"
+    "url": "https://github.com/TwanoO67/xiaomi-smart-home-gui/issues"
   },
   "engines": {
-    "node": ">=0.12.0",
-    "homebridge": ">=0.4.1"
+    "node": ">=0.12.0"
   },
   "dependencies": {
-    "sqlite3": "^3.1.8"
+    "loopback-connector-sqlite3": "^1.2.0",
+    "sqlite3": "^3.1.8",
+    "static-server": "^2.0.3"
   }
 }
