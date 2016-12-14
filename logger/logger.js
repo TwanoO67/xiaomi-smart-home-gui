@@ -20,7 +20,7 @@ db.serialize(function() {
 var log_insert = db.prepare("INSERT INTO xiaomi_log (date,sid,model,cmd,data) VALUES (?,?,?,?,?)");
 var device_insert = db.prepare("INSERT OR IGNORE INTO xiaomi_device (sid,name,model) VALUES (?,?,?)");
 var device_update_model = db.prepare("UPDATE xiaomi_device SET model = ? WHERE sid = ?");
-var interval_begin = db.prepare("INSERT INTO xiaomi_heartbeat (sid,model,data,interval_begin_date,last_hb_date,last) VALUES (?,?,?,?,?,1)");
+var interval_begin = db.prepare("INSERT INTO xiaomi_heartbeat (sid,model,data,interval_begin_date,last_hb_date,is_last_state) VALUES (?,?,?,?,?,1)");
 var interval_update_hb = db.prepare("UPDATE xiaomi_heartbeat SET last_hb_date=? WHERE id=?");
 var interval_end = db.prepare("UPDATE xiaomi_heartbeat SET last_hb_date=?, interval_end_date=?, is_last_state=0 WHERE id=? ");
 //db.close();
