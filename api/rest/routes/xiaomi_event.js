@@ -35,7 +35,10 @@ router.param('item_id', function(req, res, next, id) {
 // Optionally specify the GET param include_items to also return the items
 // of this event.
 router.get('/', function(req, res, next) {
-  var opts = {};
+  var opts = {
+    offset: 0,
+    limit: 50
+  };
 
   /*if (!!req.query.include_items) {
     opts['include'] = [ models.xiaomi_eventItem ];
