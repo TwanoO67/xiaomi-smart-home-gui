@@ -7,7 +7,7 @@ construction du docker
 
 lancement du logger
 
-```docker run -v /mydiskdata/store:/mihome/db -d --net host --name xiaomi_logger myuser/containername```
+```docker run -v /mydiskdata/store:/mihome/db -p 80:1337 -d --net host --name xiaomi_logger myuser/containername```
 
 
 ## Principe de fonctionnement

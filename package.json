@@ -19,6 +19,11 @@
     "node": ">=0.12.0"
   },
   "dependencies": {
+    "body-parser": "~1.13.2",
+    "express": "^4.13.4",
+    "morgan": "^1.6.1",
+    "sequelize": "^3.19.3",
+    "sequelize-cli": "^2.3.1",
     "loopback-connector-sqlite3": "^1.2.0",
     "sqlite3": "^3.1.8",
     "static-server": "^2.0.3"

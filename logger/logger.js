@@ -12,17 +12,17 @@ var path = require('path');
 var db = new sqlite3.Database(path.join(__dirname, '..', 'db', 'database.db'));
 
 db.serialize(function() {
-  db.run("CREATE TABLE IF NOT EXISTS xiaomi_event (id INTEGER PRIMARY KEY AUTOINCREMENT, date INTEGER, sid TEXT, model TEXT, cmd TEXT,data TEXT)");
-  db.run("CREATE TABLE IF NOT EXISTS xiaomi_device (sid TEXT PRIMARY KEY, name TEXT, model TEXT)");
-  db.run("CREATE TABLE IF NOT EXISTS xiaomi_heartbeat (id INTEGER PRIMARY KEY AUTOINCREMENT, sid TEXT, model TEXT, is_last_state INTEGER, data TEXT, interval_begin_date INTEGER, interval_end_date INTEGER, last_heartbeat_date INTEGER)");
+  db.run("CREATE TABLE IF NOT EXISTS xiaomi_events (id INTEGER PRIMARY KEY AUTOINCREMENT, date INTEGER, sid TEXT, model TEXT, cmd TEXT,data TEXT, createdAt INTEGER, updatedAt INTEGER)");
+  db.run("CREATE TABLE IF NOT EXISTS xiaomi_devices (sid TEXT PRIMARY KEY, name TEXT, model TEXT, createdAt INTEGER, updatedAt INTEGER)");
+  db.run("CREATE TABLE IF NOT EXISTS xiaomi_heartbeats (id INTEGER PRIMARY KEY AUTOINCREMENT, sid TEXT, model TEXT, is_last_state INTEGER, data TEXT, interval_begin_date INTEGER, interval_end_date INTEGER, last_heartbeat_date INTEGER, createdAt INTEGER, updatedAt INTEGER)");
 });
 
-var event_log_insert = db.prepare("INSERT INTO xiaomi_event (date,sid,model,cmd,data) VALUES (?,?,?,?,?)");
-var device_insert = db.prepare("INSERT OR IGNORE INTO xiaomi_device (sid,name,model) VALUES (?,?,?)");
-var device_update_model = db.prepare("UPDATE xiaomi_device SET model = ? WHERE sid = ?");
-var interval_begin = db.prepare("INSERT INTO xiaomi_heartbeat (sid,model,data,interval_begin_date,last_heartbeat_date,is_last_state) VALUES (?,?,?,?,?,1)");
-var interval_update_hb = db.prepare("UPDATE xiaomi_heartbeat SET last_heartbeat_date=? WHERE id=?");
-var interval_end = db.prepare("UPDATE xiaomi_heartbeat SET last_heartbeat_date=?, interval_end_date=?, is_last_state=0 WHERE id=? ");
+var event_log_insert = db.prepare("INSERT INTO xiaomi_events (date,sid,model,cmd,data,createdAt) VALUES (?,?,?,?,?,strftime('%s','now'))");
+var device_insert = db.prepare("INSERT OR IGNORE INTO xiaomi_devices (sid,name,model,createdAt) VALUES (?,?,?,strftime('%s','now'))");
+var device_update_model = db.prepare("UPDATE xiaomi_devices SET model = ?, updatedAt = strftime('%s','now') WHERE sid = ?");
+var interval_begin = db.prepare("INSERT INTO xiaomi_heartbeats (sid,model,data,interval_begin_date,last_heartbeat_date,is_last_state,createdAt) VALUES (?,?,?,?,?,1,strftime('%s','now'))");
+var interval_update_hb = db.prepare("UPDATE xiaomi_heartbeats SET last_heartbeat_date=? , updatedAt = strftime('%s','now') WHERE id=?");
+var interval_end = db.prepare("UPDATE xiaomi_heartbeats SET last_heartbeat_date=?, interval_end_date=?, is_last_state=0 , updatedAt = strftime('%s','now') WHERE id=? ");
 //db.close();
 
 //interprete les log en fonctions du type
@@ -69,7 +69,7 @@ function updateState(json){
     return true;
   }
 
-  db.all(" SELECT * from xiaomi_heartbeat WHERE sid = '"+json['sid']+"' AND is_last_state = 1 ", function(err, rows) {
+  db.all(" SELECT * from xiaomi_heartbeats WHERE sid = '"+json['sid']+"' AND is_last_state = 1 ", function(err, rows) {
       var now = Date.now();//on fixe la microseconde
       if(err){
         console.error(err);
