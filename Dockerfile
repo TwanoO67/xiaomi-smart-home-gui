@@ -25,6 +25,7 @@ RUN cd ..
 
 CMD [ "node", "./logger/logger.js" ]
 CMD [ "node", "./gui/server.js" ]
+CMD [ "./api/rest/bin/www" ]
 
-EXPOSE 1337
+EXPOSE 1337 3000
 VOLUME ["/mihome/db"]
