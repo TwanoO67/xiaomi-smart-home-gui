@@ -4,6 +4,7 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 
 var xiaomi_event_routes = require('./routes/xiaomi_event');
+var xiaomi_device_routes = require('./routes/xiaomi_device');
 
 var app = express();
 
@@ -16,6 +17,7 @@ if (process.env.NODE_ENV !== 'test') {
 app.use(bodyParser.json());
 
 app.use('/xiaomi_event', xiaomi_event_routes);
+app.use('/xiaomi_device', xiaomi_device_routes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
