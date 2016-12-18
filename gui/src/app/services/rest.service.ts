@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers } from '@angular/http';
-import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { Configuration } from '../app.constants';
 
@@ -9,104 +9,103 @@ export class RestService {
     public modelName: string;
     private headers: Headers;
 
-    //cache data
-    public last_getAll: Array<any>;
-    public last_get: any;
+    // cache data
+    public lastGetAll: Array<any>;
+    public lastGet: any;
 
-    constructor(private _http: Http, private _configuration: Configuration) {
-        this.modelName = "to-configure";
+    constructor(private http: Http, private config: Configuration) {
+        this.modelName = 'to-configure';
 
         this.headers = new Headers();
         this.headers.append('Content-Type', 'application/json');
         this.headers.append('Accept', 'application/json');
     }
 
-    //HELPERS
-    public getAllFromLS(maxtime: number = 0): Array<any>{
-      let json = localStorage.getItem("rest_all_"+this.modelName);
-      if(json){
+    // HELPERS
+    public getAllFromLS(maxtime = 0): Array<any> {
+      let json = localStorage.getItem( 'rest_all_' + this.modelName );
+      if ( json ) {
         let obj = JSON.parse(json);
-        if(obj && (obj.date < (Date.now() - maxtime)) ){
+        if ( obj && (obj.date < (Date.now() - maxtime) ) ) {
           return obj;
         }
       }
     }
 
 
-    public getFromCache(id): any{
-      if(this.last_getAll){
-        return this.last_getAll.find((unit) => unit.id === id);
-      }
-      else{
+    public getFromCache(id): any {
+      if (this.lastGetAll) {
+        return this.lastGetAll.find((unit) => unit.id === id);
+      } else {
         return null;
       }
     }
 
-    private getActionUrl(){
-      return this._configuration.ServerWithApiUrl + this.modelName + '/';
+    private getActionUrl() {
+      return this.config.serverWithApiUrl + this.modelName + '/';
     }
 
 
-    //REST functions
-    public getAll(): Observable<any[]>{
-        return this._http.get(this.getActionUrl())
+    // REST functions
+    public getAll(): Observable<any[]> {
+        return this.http.get(this.getActionUrl())
             .map((response: Response) => {
-              //recuperation du tableau portant le nom de la collection
+              // recuperation du tableau portant le nom de la collection
               let data = response.json()[this.modelName];
-              //transformation du format indexé, au format associatif
-              let tab = data.records.map((elem)=>{
+              // transformation du format indexé, au format associatif
+              let tab = data.records.map((elem) => {
                 let unit = {};
-                //on se base sur le numéro des columns et l'ordre pour reconstruire l'objet
-                data.columns.forEach((champ,index) => {
+                // on se base sur le numéro des columns et l'ordre pour reconstruire l'objet
+                data.columns.forEach( (champ, index) => {
                   unit[champ] = elem[index];
                 });
                 return unit;
               });
-              this.last_getAll = tab;
+              this.lastGetAll = tab;
               let obj = {
-                date: Date.now(),
-                data: tab
+                data: tab,
+                date: Date.now()
               };
-              localStorage.setItem("rest_all_"+this.modelName,JSON.stringify(obj));
+              localStorage.setItem( 'rest_all_' + this.modelName, JSON.stringify(obj) );
               return tab;
             })
             .catch(this.handleError);
     }
 
-    public get(id: number): Observable<any>{
-        return this._http.get(this.getActionUrl() + id)
+    public get(id: number): Observable<any> {
+        return this.http.get(this.getActionUrl() + id)
             .map((response: Response) => {
               let data = response.json();
-              this.last_get = data;
+              this.lastGet = data;
               return data;
             })
             .catch(this.handleError);
     }
 
-    public add(item: any): Observable<number>{
+    public add(item: any): Observable<number> {
         let toAdd = JSON.stringify(item);
 
-        return this._http.post(this.getActionUrl(), toAdd, { headers: this.headers })
+        return this.http.post(this.getActionUrl(), toAdd, { headers: this.headers })
             .map((response: Response) => response.json())
             .catch(this.handleError);
     }
 
-    public addAll(tab: Array<any>): Observable<Array<number>>{
+    public addAll(tab: Array<any>): Observable<Array<number>> {
       let toAdd = JSON.stringify(tab);
 
-      return this._http.post(this.getActionUrl(), toAdd, { headers: this.headers })
+      return this.http.post(this.getActionUrl(), toAdd, { headers: this.headers })
           .map((response: Response) => response.json())
           .catch(this.handleError);
     }
 
-    public update(id: number, itemToUpdate: any): Observable<number>{
-        return this._http.put(this.getActionUrl() + id, JSON.stringify(itemToUpdate), { headers: this.headers })
+    public update(id: number, itemToUpdate: any): Observable<number> {
+        return this.http.put(this.getActionUrl() + id, JSON.stringify(itemToUpdate), { headers: this.headers })
             .map((response: Response) => response.json())
             .catch(this.handleError);
     }
 
-    public delete(id: number): Observable<Response>{
-        return this._http.delete(this.getActionUrl() + id)
+    public delete(id: number): Observable<Response> {
+        return this.http.delete(this.getActionUrl() + id)
             .catch(this.handleError);
     }
 
