@@ -72,7 +72,7 @@ export class NodeRestService {
             .catch(this.handleError);
     }
 
-    public get(id: number): Observable<any> {
+    public get(id: any): Observable<any> {
         return this.http.get(this.getActionUrl() + id)
             .map((response: Response) => {
               let data = response.json();
@@ -98,13 +98,13 @@ export class NodeRestService {
           .catch(this.handleError);
     }
 
-    public update(id: number, itemToUpdate: any): Observable<number> {
+    public update(id: any, itemToUpdate: any): Observable<number> {
         return this.http.put(this.getActionUrl() + id, JSON.stringify(itemToUpdate), { headers: this.headers })
             .map((response: Response) => response.json())
             .catch(this.handleError);
     }
 
-    public delete(id: number): Observable<Response> {
+    public delete(id: any): Observable<Response> {
         return this.http.delete(this.getActionUrl() + id)
             .catch(this.handleError);
     }

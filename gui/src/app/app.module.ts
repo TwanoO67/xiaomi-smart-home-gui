@@ -6,6 +6,7 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { AlertModule, DatepickerModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { ToasterModule } from 'angular2-toaster/angular2-toaster';
+import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { environment } from '../environments/environment';
 
 let modules = [
@@ -15,7 +16,8 @@ let modules = [
   FormsModule,
   HttpModule,
   RouterModule,
-  ToasterModule
+  ToasterModule,
+  ChartsModule
 ];
 
 import { AppHeaderComponent } from "./widgets/app-header";
@@ -40,10 +42,11 @@ let widgets = [
 import { UserService } from "./services/user.service";
 import { MessagesService } from "./services/messages.service";
 import { NotificationService } from './services/notification.service';
-import { XiaomiDeviceService } from "./services/data/xiaomi_device.service";
 import { BreadcrumbService } from "./services/breadcrumb.service";
 import { NodeRestService } from "./services/node-rest.service";
+import { XiaomiDeviceService } from "./services/data/xiaomi_device.service";
 import { XiaomiEventService } from "./services/data/xiaomi_event.service";
+import { XiaomiHeartbeatService } from "./services/data/xiaomi_heartbeat.service";
 
 let services =  [
   UserService,
@@ -52,15 +55,18 @@ let services =  [
   BreadcrumbService,
   NodeRestService,
   XiaomiEventService,
-  XiaomiDeviceService
+  XiaomiDeviceService,
+  XiaomiHeartbeatService
 ];
 
 import { HomeComponent } from './pages/home/home.component';
 import { DeviceComponent } from './pages/device/device.component';
+import { HeartbeatComponent } from './pages/heartbeat/heartbeat.component';
 
 let pages = [
   HomeComponent,
-  DeviceComponent
+  DeviceComponent,
+  HeartbeatComponent
 ]
 
 import { toDevicePipe } from "./pipes/device";

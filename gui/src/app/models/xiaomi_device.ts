@@ -1,5 +1,5 @@
 export class XiaomiDevice{
-  public sid: number;
+  public sid: string = "";
   public model: string;
   public name: string;
   public createdAt: number;

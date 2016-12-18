@@ -21,6 +21,11 @@ export class MenuAsideComponent implements OnInit {
       "icon": "gears",
       "link": ['/devices']
     },
+    {
+      "title": "Heartbeat",
+      "icon": "area-chart",
+      "link": ['/heartbeat']
+    }
     /*{
       "title": "Sub menu",
       "icon": "link",
