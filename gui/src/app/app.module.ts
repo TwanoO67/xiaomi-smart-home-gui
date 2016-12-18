@@ -40,7 +40,7 @@ let widgets = [
 import { UserService } from "./services/user.service";
 import { MessagesService } from "./services/messages.service";
 import { NotificationService } from './services/notification.service';
-import { DeviceService } from "./services/data/device.service";
+import { XiaomiDeviceService } from "./services/data/xiaomi_device.service";
 import { BreadcrumbService } from "./services/breadcrumb.service";
 import { NodeRestService } from "./services/node-rest.service";
 import { XiaomiEventService } from "./services/data/xiaomi_event.service";
@@ -52,7 +52,7 @@ let services =  [
   BreadcrumbService,
   NodeRestService,
   XiaomiEventService,
-  DeviceService
+  XiaomiDeviceService
 ];
 
 import { HomeComponent } from './pages/home/home.component';

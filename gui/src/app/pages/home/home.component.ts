@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { XiaomiEvent } from "../../models/xiaomi_event";
 import { BreadcrumbService } from "../../services/breadcrumb.service";
 import { XiaomiEventService } from "../../services/data/xiaomi_event.service";
+import { XiaomiDeviceService } from "../../services/data/xiaomi_device.service";
 
 @Component({
   selector: 'app-home',
@@ -17,10 +18,14 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private _bread_serv: BreadcrumbService,
-    private _events: XiaomiEventService
+    private _events: XiaomiEventService,
+    private _devices: XiaomiDeviceService
   ) { }
 
   ngOnInit() {
+    //on charge les devices
+    this._devices.getAll().publish().connect();
+
     //on ecoute le service rest
     this._events.getAll().subscribe((all) => {
       this.last_log = all;
@@ -31,10 +36,12 @@ export class HomeComponent implements OnInit {
       this.last_log.forEach((log)=>{
         let date: Date = new Date(log.date);
         let day = date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear();
-        if(typeof this.log_by_day[day] === "undefined")
+        if(typeof this.log_by_day[day] === "undefined"){
           this.log_by_day[day] = [];
+          this.dates.push(day);
+        }
         this.log_by_day[day].push(log);
-        this.dates.push(day);
+
       });
       console.log(this.log_by_day);
       //this.dates = this.dates.unique();

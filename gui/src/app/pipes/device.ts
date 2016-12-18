@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { DeviceService } from "../services/data/device.service";
-import { Device } from "../models/device";
+import { XiaomiDeviceService } from "../services/data/xiaomi_device.service";
+import { XiaomiDevice } from "../models/xiaomi_device";
 
 //Transforme un id de prestation en Prestation
 
@@ -8,10 +8,16 @@ import { Device } from "../models/device";
 export class toDevicePipe implements PipeTransform {
 
   constructor(
-    private _device_serv: DeviceService
+    private _device_serv: XiaomiDeviceService
   ){ }
 
-  transform(id: number): Device {
-    return this._device_serv.getFromSid(id);
+  transform(id: number): XiaomiDevice {
+    let mymodel = this._device_serv.getFromSid(id);
+    if( mymodel ){
+      return mymodel
+    }
+    else{
+      return new XiaomiDevice();
+    }
   }
 }
