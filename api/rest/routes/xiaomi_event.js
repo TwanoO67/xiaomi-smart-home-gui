@@ -37,6 +37,7 @@ router.param('item_id', function(req, res, next, id) {
 router.get('/', function(req, res, next) {
   var opts = {
     offset: 0,
+    order: 'createdAt DESC',
     limit: 50
   };
 
