@@ -17,7 +17,7 @@
           <!-- timeline icon -->
           <i class="fa fa-user bg-blue"></i>
           <div class="timeline-item">
-              <span class="time"><i class="fa fa-clock-o"></i> {{log.date}}</span>
+              <span class="time"><i class="fa fa-clock-o"></i> {{log.date | date : 'mediumTime' }}</span>
 
               <h3 class="timeline-header"><a href="#">Mouvement</a> {{(log.sid | toDevice).name }}</h3>
 
@@ -35,7 +35,7 @@
           <!-- timeline icon -->
           <i class="fa fa-lock bg-maroon"></i>
           <div class="timeline-item">
-              <span class="time"><i class="fa fa-clock-o"></i> {{log.date}}</span>
+              <span class="time"><i class="fa fa-clock-o"></i> {{log.date | date : 'mediumTime' }}</span>
 
               <h3 class="timeline-header">
                 <a href="#" *ngIf="log.getData().status === 'close'">Fermeture</a>
@@ -56,7 +56,7 @@
           <!-- timeline icon -->
           <i class="fa fa-lock bg-maroon"></i>
           <div class="timeline-item">
-              <span class="time"><i class="fa fa-clock-o"></i> {{log.date}}</span>
+              <span class="time"><i class="fa fa-clock-o"></i> {{log.date | date : 'mediumTime' }}</span>
 
               <h3 class="timeline-header">
                 <a href="#" >Evenement autre</a>
