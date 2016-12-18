@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { Http, Response, Headers } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
-import { Configuration } from '../app.constants';
+import { environment } from '../../environments/environment';
 
 @Injectable()
-export class RestService {
+export class NodeRestService {
     public modelName: string;
     private headers: Headers;
 
@@ -13,7 +13,7 @@ export class RestService {
     public lastGetAll: Array<any>;
     public lastGet: any;
 
-    constructor(private http: Http, private config: Configuration) {
+    constructor(private http: Http ) {
         this.modelName = 'to-configure';
 
         this.headers = new Headers();
@@ -42,7 +42,7 @@ export class RestService {
     }
 
     private getActionUrl() {
-      return this.config.serverWithApiUrl + this.modelName + '/';
+      return environment.backendURL + this.modelName + '/';
     }
 
 
@@ -50,12 +50,12 @@ export class RestService {
     public getAll(): Observable<any[]> {
         return this.http.get(this.getActionUrl())
             .map((response: Response) => {
-              // recuperation du tableau portant le nom de la collection
-              let data = response.json()[this.modelName];
-              // transformation du format indexé, au format associatif
-              let tab = data.records.map((elem) => {
+              // getting an array having the same name as the model
+              let data = response.json()/*[this.modelName]*/;
+              // transforming the array from indexed to associative
+              let tab = data/*.records*/.map((elem) => {
                 let unit = {};
-                // on se base sur le numéro des columns et l'ordre pour reconstruire l'objet
+                //using the cloumns order and number to rebuild the object
                 data.columns.forEach( (champ, index) => {
                   unit[champ] = elem[index];
                 });

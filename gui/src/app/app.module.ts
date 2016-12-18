@@ -42,14 +42,16 @@ import { MessagesService } from "./services/messages.service";
 import { NotificationService } from './services/notification.service';
 import { DeviceService } from "./services/data/device.service";
 import { BreadcrumbService } from "./services/breadcrumb.service";
-import { Configuration } from "./app.constants";
+import { NodeRestService } from "./services/node-rest.service";
+import { XiaomiEventService } from "./services/data/xiaomi_event.service";
 
 let services =  [
-  Configuration,
   UserService,
   MessagesService,
   NotificationService,
   BreadcrumbService,
+  NodeRestService,
+  XiaomiEventService,
   DeviceService
 ];
 

@@ -3,14 +3,13 @@ import { Http, Response, Headers } from '@angular/http';
 import 'rxjs/add/operator/map'
 import { Observable } from 'rxjs/Observable';
 import { Device } from '../../models/device';
-import { RestService } from "../rest.service";
-import { Configuration } from '../../app.constants';
+import { NodeRestService } from "../node-rest.service";
 
 @Injectable()
-export class DeviceService extends RestService {
+export class DeviceService extends NodeRestService {
 
-    constructor(_http: Http, _configuration: Configuration) {
-        super(_http,_configuration);
+    constructor(_http: Http) {
+        super(_http);
         this.modelName = 'device';
     }
 

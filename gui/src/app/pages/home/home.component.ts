@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { XiaomiLog } from "../../models/xiaomi_log";
+import { XiaomiEvent } from "../../models/xiaomi_event";
 import { BreadcrumbService } from "../../services/breadcrumb.service";
+import { XiaomiEventService } from "../../services/data/xiaomi_event.service";
 
 @Component({
   selector: 'app-home',
@@ -10,28 +11,31 @@ import { BreadcrumbService } from "../../services/breadcrumb.service";
 export class HomeComponent implements OnInit {
   public date: Date = new Date();
 
-  public last_log : Array<XiaomiLog> = [];
+  public last_log : Array<XiaomiEvent> = [];
   public log_by_day: any;
   public dates : Array<string> = [];
 
-  constructor(private _bread_serv: BreadcrumbService) {
+  constructor(
+    private _bread_serv: BreadcrumbService,
+    private _events: XiaomiEventService
+  ) {
   //donnée de test
   this.last_log = [
-    new XiaomiLog({
+    new XiaomiEvent({
       id: 1,
       date: 1481282539000,
       sid: 4321,
       model: "motion",
       data: '{"status": "motion"}'
     }),
-    new XiaomiLog({
+    new XiaomiEvent({
       id: 2,
       date: 1481289876000,
       sid: 1234,
       model: "motion",
       data: '{"status": "motion"}'
     }),
-    new XiaomiLog({
+    new XiaomiEvent({
       id: 3,
       date: 1241289876000,
       sid: 3456,
@@ -42,6 +46,11 @@ export class HomeComponent implements OnInit {
 }
 
   ngOnInit() {
+    //on ecoute le service rest
+    this._events.getAll().subscribe((all) => {
+      this.last_log = all;
+    });
+
     //on place le header
     this._bread_serv.set({
       display: false,
