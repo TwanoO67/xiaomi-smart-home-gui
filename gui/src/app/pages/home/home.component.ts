@@ -12,7 +12,7 @@ import { XiaomiDeviceService } from "../../services/data/xiaomi_device.service";
 export class HomeComponent implements OnInit {
   public date: Date = new Date();
 
-  public last_log : Array<XiaomiEvent> = [];
+  public last_events : Array<XiaomiEvent> = [];
   public log_by_day: any;
   public dates : Array<string> = [];
 
@@ -24,16 +24,18 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     //on charge les devices
-    this._devices.getAll().publish().connect();
+    this._devices.getAll().subscribe((devices) => {
+      console.log(devices);
+    });
 
     //on ecoute le service rest
     this._events.getAll().subscribe((all) => {
-      this.last_log = all;
+      this.last_events = all;
 
       //tri des données par jours
       this.log_by_day = {};
-      console.log(this.last_log);
-      this.last_log.forEach((log)=>{
+      console.log(this.last_events);
+      this.last_events.forEach((log)=>{
         let date: Date = new Date(log.date);
         let day = date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear();
         if(typeof this.log_by_day[day] === "undefined"){

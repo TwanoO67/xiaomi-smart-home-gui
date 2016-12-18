@@ -12,15 +12,16 @@
     <template ngFor let-log [ngForOf]="log_by_day[day]">
       <li [ngSwitch]="log.model">
         <template [ngSwitchCase]="'motion'">
-          <i class="fa fa-user bg-blue"></i>
+          <i class="fa fa-male bg-blue"></i>
           <div class="timeline-item">
               <span class="time"><i class="fa fa-clock-o"></i> {{log.date | date : 'mediumTime' }}</span>
 
               <h3 class="timeline-header"><a href="#">Mouvement</a> {{(log.sid | toDevice).name }}</h3>
 
-              <!--div class="timeline-body">
-                  {{log.data}}
-              </div>
+              <div class="timeline-body">
+                <span *ngIf="log.getData().status === 'motion' ">Début de passage</span>
+                <span *ngIf="log.getData().status === 'no_motion' ">Fin de passage</span>
+              </div><!--
 
               <div class="timeline-footer">
                   <a class="btn btn-primary btn-xs">...</a>
@@ -28,7 +29,7 @@
           </div>
         </template>
         <template [ngSwitchCase]="'magnet'">
-          <i class="fa fa-lock bg-maroon"></i>
+          <i [ngClass]="{'fa':true, 'bg-maroon':true, 'fa-lock': log.getData().status === 'close',  'fa-unlock': log.getData().status !== 'close'}" ></i>
           <div class="timeline-item">
               <span class="time"><i class="fa fa-clock-o"></i> {{log.date | date : 'mediumTime' }}</span>
 
@@ -40,7 +41,7 @@
           </div>
         </template>
         <template [ngSwitchCase]="'switch'">
-          <i class="fa fa-lock bg-maroon"></i>
+          <i class="fa fa-mouse-pointer bg-maroon"></i>
           <div class="timeline-item">
               <span class="time"><i class="fa fa-clock-o"></i> {{log.date | date : 'mediumTime' }}</span>
 
