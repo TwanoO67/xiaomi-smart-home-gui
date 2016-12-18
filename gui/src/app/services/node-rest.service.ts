@@ -53,14 +53,14 @@ export class NodeRestService {
               // getting an array having the same name as the model
               let data = response.json()/*[this.modelName]*/;
               // transforming the array from indexed to associative
-              let tab = data/*.records*/.map((elem) => {
+              let tab = data/*.records.map((elem) => {
                 let unit = {};
                 //using the cloumns order and number to rebuild the object
                 data.columns.forEach( (champ, index) => {
                   unit[champ] = elem[index];
                 });
                 return unit;
-              });
+              });*/
               this.lastGetAll = tab;
               let obj = {
                 data: tab,
