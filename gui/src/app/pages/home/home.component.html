@@ -9,12 +9,9 @@
         </span>
     </li>
     <!-- /.timeline-label -->
-
-    <!-- timeline item -->
     <template ngFor let-log [ngForOf]="log_by_day[day]">
-    <li>
-        <template [ngIf]="log.model == 'motion'">
-          <!-- timeline icon -->
+      <li [ngSwitch]="log.model">
+        <template [ngSwitchCase]="'motion'">
           <i class="fa fa-user bg-blue"></i>
           <div class="timeline-item">
               <span class="time"><i class="fa fa-clock-o"></i> {{log.date | date : 'mediumTime' }}</span>
@@ -30,9 +27,7 @@
               </div-->
           </div>
         </template>
-
-        <template [ngIf]="log.model == 'magnet'">
-          <!-- timeline icon -->
+        <template [ngSwitchCase]="'magnet'">
           <i class="fa fa-lock bg-maroon"></i>
           <div class="timeline-item">
               <span class="time"><i class="fa fa-clock-o"></i> {{log.date | date : 'mediumTime' }}</span>
@@ -40,19 +35,19 @@
               <h3 class="timeline-header">
                 <a href="#" *ngIf="log.getData().status === 'close'">Fermeture</a>
                 <a href="#" *ngIf="log.getData().status !== 'close'">Ouverture</a>
-                {{(log.sid | toDevice).name }}</h3>
-
-              <!--div class="timeline-body">
-                  {{log.data}}
-              </div>
-
-              <div class="timeline-footer">
-                  <a class="btn btn-primary btn-xs">...</a>
-              </div-->
+                {{(log.sid | toDevice).name }}
+              </h3>
           </div>
         </template>
+        <template [ngSwitchCase]="'switch'">
+          <i class="fa fa-lock bg-maroon"></i>
+          <div class="timeline-item">
+              <span class="time"><i class="fa fa-clock-o"></i> {{log.date | date : 'mediumTime' }}</span>
 
-        <template [ngIf]="log.model != 'magnet' && log.model != 'motion'">
+              <h3 class="timeline-header"><a href="#">Clic</a> {{(log.sid | toDevice).name }}</h3>
+          </div>
+        </template>
+        <template ngSwitchDefault>
           <!-- timeline icon -->
           <i class="fa fa-lock bg-maroon"></i>
           <div class="timeline-item">
@@ -67,10 +62,9 @@
               </div>
           </div>
         </template>
+      </li>
+    </template>
 
-    </li>
-    <!-- fin d'une entrée -->
-  </template>
 
 
   <!-- fin d'un jour -->
