@@ -56,9 +56,11 @@ let services =  [
 ];
 
 import { HomeComponent } from './pages/home/home.component';
+import { DeviceComponent } from './pages/device/device.component';
 
 let pages = [
   HomeComponent,
+  DeviceComponent
 ]
 
 import { toDevicePipe } from "./pipes/device";

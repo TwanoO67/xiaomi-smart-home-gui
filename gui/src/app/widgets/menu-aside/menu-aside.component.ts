@@ -16,12 +16,12 @@ export class MenuAsideComponent implements OnInit {
       "icon": "clock-o",
       "link": ['/']
     },
-    /*{
-      "title": "Client",
-      "icon": "usd",
-      "link": ['/client']
-    },
     {
+      "title": "Devices",
+      "icon": "gears",
+      "link": ['/devices']
+    },
+    /*{
       "title": "Sub menu",
       "icon": "link",
       "sublinks": [
