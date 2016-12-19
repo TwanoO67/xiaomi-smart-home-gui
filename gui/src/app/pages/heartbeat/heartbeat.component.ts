@@ -93,16 +93,28 @@ export class HeartbeatComponent implements OnInit {
       this.lineChartData = [];
       // une série pas device
       this.devices.forEach((device) => {
+        if((device.model !== "motion" && device.model !== "magnet")){
+          return true;
+        }
         let mydata = [];
         let mylabel = [];
         this.heartbeats.forEach((hb) => {
           if(device.sid == hb.sid ){
-            if(device.model == "motion" || device.model == "magnet" || device.model == "switch"){
-              mydata.push(hb.getData().status);
-            }
-            mylabel.push(hb.interval_begin_date);
+              let value = 0;
+              if(device.model == "motion" && hb.getData().status !== "no_motion"){
+                value = 1;
+              }
+              else if(device.model == "magnet" && hb.getData().status !== "close"){
+                value = 1;
+              }
+              else{
+                value = hb.getData().status;
+              }
+              mydata.push(value);
+              mylabel.push(hb.interval_begin_date);
           }
         });
+        console.log(mydata);
         this.lineChartData.push({data: mydata, label: "Ma série "+device.model});
         this.lineChartLabels = mylabel;
 
