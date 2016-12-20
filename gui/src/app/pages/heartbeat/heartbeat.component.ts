@@ -98,19 +98,44 @@ export class HeartbeatComponent implements OnInit {
         let mydata = [];
         let mylabel = [];
         this.heartbeats.forEach((hb) => {
+          console.log(hb);
           if(device.sid == hb.sid ){
               let value = 0;
-              if(device.model == "motion" && hb.getData().status !== "no_motion"){
-                value = 1;
+              if(device.model === "motion"){
+                if( hb.getData().status !== "no_motion" ){
+                  mydata.push(1);
+                  mylabel.push(hb.interval_begin_date);
+                  mydata.push(1);
+                  mylabel.push(hb.interval_end_date);
+                }
+                else{
+                  mydata.push(0);
+                  mylabel.push(hb.interval_begin_date);
+                  mydata.push(0);
+                  mylabel.push(hb.interval_end_date);
+                }
               }
-              else if(device.model == "magnet" && hb.getData().status !== "close"){
-                value = 1;
+              else if(device.model === "magnet"){
+                if( hb.getData().status !== "close" ){
+                  mydata.push(1);
+                  mylabel.push(hb.interval_begin_date);
+                  mydata.push(1);
+                  mylabel.push(hb.interval_end_date);
+                }
+                else{
+                  mydata.push(0);
+                  mylabel.push(hb.interval_begin_date);
+                  mydata.push(0);
+                  mylabel.push(hb.interval_end_date);
+                }
               }
               else{
-                value = hb.getData().status;
+                mydata.push(hb.getData().status);
+                mylabel.push(hb.interval_begin_date);
+                mydata.push(hb.getData().status);
+                mylabel.push(hb.interval_end_date);
               }
-              mydata.push(value);
-              mylabel.push(hb.interval_begin_date);
+
           }
         });
         console.log(mydata);
