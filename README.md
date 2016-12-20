@@ -22,19 +22,13 @@ modifier le contenu du dossier gui/src
 puis tester vos modifier avec le serveur de Developpement
 ``` npm start ```
 
-## Dockerisation - WIP
+## Docker
 
-Attention ceci n'est pas finalisé!
-
-### construction du docker
-
-```docker build -t twanoo67/mihome .```
-
-### lancement du logger
+Vous pouvez lancer l'application entierement via docker, pour cela :
 
 Remplacer mon_disk/mon_dossier par le dossier ou vous souhaitez sauvegarder votre base de donnée
 
-```docker run -v /mon_disk/mon_dossier:/mihome/db -d --net host --name mihome twanoo67/mihome```
+```docker run -v /mon_disk/mon_dossier:/mihome/db -d --net host --name mihome twanoo/mihome```
 
 L'appli est ensuite disponible sur le port 3000
 
