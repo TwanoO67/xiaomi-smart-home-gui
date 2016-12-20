@@ -3,9 +3,6 @@ var path = require('path');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 
-var xiaomi_event_routes = require('./routes/xiaomi_event');
-var xiaomi_device_routes = require('./routes/xiaomi_device');
-var xiaomi_heartbeat_routes = require('./routes/xiaomi_heartbeat');
 
 var app = express();
 
@@ -25,9 +22,20 @@ app.use(function(req, res, next) {
 
 app.use(bodyParser.json());
 
-app.use('/xiaomi_event', xiaomi_event_routes);
-app.use('/xiaomi_device', xiaomi_device_routes);
-app.use('/xiaomi_heartbeat', xiaomi_heartbeat_routes);
+//ajout des routes pour chaque model
+var fs = require('fs');
+fs.readdirSync(__dirname+"/routes")
+  .filter(function(file) {
+    return (file.indexOf('.') !== 0) && (file.slice(-3) === '.js');
+  })
+  .forEach(function(file) {
+    var name = file.split('.js')[0];
+    var routes = require('./routes/'+name);
+    app.use('/'+name,routes);
+  });
+
+//ajout de la GUI (direct sur la home)
+app.use(express.static(path.join(__dirname,'gui')))
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

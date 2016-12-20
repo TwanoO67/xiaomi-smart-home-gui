@@ -6,7 +6,9 @@
   "keywords": [
     "xiaomi",
     "smart",
-    "home"
+    "mi",
+    "home",
+    "gui"
   ],
   "repository": {
     "type": "git",
@@ -25,7 +27,6 @@
     "sequelize": "^3.19.3",
     "sequelize-cli": "^2.3.1",
     "loopback-connector-sqlite3": "^1.2.0",
-    "sqlite3": "^3.1.8",
-    "static-server": "^2.0.3"
+    "sqlite3": "^3.1.8"
   }
 }

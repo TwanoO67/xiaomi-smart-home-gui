@@ -1,19 +1,17 @@
 #!/bin/bash
 echo "Installation des dependances ";
 
-cd api/rest
 npm install
 
-cd ../../logger
-npm install
-
-cd ../gui
-npm install
+#Dependance de dev pour la GUI
+#cd ../gui
+#npm install
 
 cd ..
-if [ ! -f db/database.db ]
+if [ ! -f ./db/database.db ]
 then
-  touch db/database.db
+  mkdir -p ./db
+  touch ./db/database.db
 fi
 
 echo "Installation terminée, lancez le scripts avec start.sh"

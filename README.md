@@ -28,11 +28,15 @@ Attention ceci n'est pas finalisé!
 
 ### construction du docker
 
-```docker build -t myuser/containername```
+```docker build -t twanoo67/mihome .```
 
 ### lancement du logger
 
-```docker run -v /mydiskdata/store:/mihome/db -p 80:1337 -d --net host --name xiaomi_logger myuser/containername```
+Remplacer mon_disk/mon_dossier par le dossier ou vous souhaitez sauvegarder votre base de donnée
+
+```docker run -v /mon_disk/mon_dossier:/mihome/db -d --net host --name mihome twanoo67/mihome```
+
+L'appli est ensuite disponible sur le port 3000
 
 
 ## Principe de fonctionnement
@@ -50,7 +54,7 @@ Le clic et double-clic sur un bouton sont rapide (ordre de la seconde)
 
 ## Source
 Logger: fork de [homebridge-aquara](https://github.com/snOOrz/homebridge-aqara)
-API: fork de [mevdschee/php-crud-api](https://github.com/mevdschee/php-crud-api) et de [alexpls/cart_rest_example](https://github.com/alexpls/cart_rest_example)
+API: fork de [alexpls/cart_rest_example](https://github.com/alexpls/cart_rest_example)
 GUI: fork de [TwanoO67/ng2-admin-lte](https://github.com/TwanoO67/ng2-admin-lte)
 Commande xiaomi https://louiszl.gitbooks.io/lumi-gateway-local-api/content/plug.html (CN)
 
