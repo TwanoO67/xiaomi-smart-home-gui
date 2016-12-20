@@ -1,4 +1,4 @@
 mihome/database.db
 node_modules
 gui/node_modules
-db
+db/database.db

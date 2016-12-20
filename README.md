@@ -1,11 +1,42 @@
 # Xiaomi Smart Home - GUI
 
-construction du docker
+
+## Lancement du projet
+
+### Créer une base vide
+```touch db/database.db```
+
+### Ou utiliser les données de test
+```cp db/test.db db/database.db```
+
+### Lancement de l'API (sert la base en rst)
+```node api/rest/index.js```
+à tester avec l'url : http://localhost:3000/xiaomi_device/
+
+### Lancement du logger (remplis la base avec les events)
+```node logger/index.js ```
+
+### Lancement du serveur web (qui fournie l'appli)
+``` node gui/index.js ```
+
+
+## Developpement
+
+Si vous souhaitez modifier la gui
+modifier le contenu du dossier gui/src
+puis tester vos modifier avec le serveur de Developpement
+``` npm start ```
+( cela remplace l'étape de lancement du serveur web )
+
+## Dockerisation - WIP
+
+Attention ceci n'est pas finalisé!
+
+### construction du docker
 
 ```docker build -t myuser/containername```
 
-
-lancement du logger
+### lancement du logger
 
 ```docker run -v /mydiskdata/store:/mihome/db -p 80:1337 -d --net host --name xiaomi_logger myuser/containername```
 

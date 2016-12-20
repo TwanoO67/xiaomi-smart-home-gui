@@ -27,7 +27,7 @@ readline.createInterface({
     socket.send(line, 0, line.length, 9898, 'localhost');
 });
 
-// nodejs udpclient.js
+// nodejs sender.js
 // type commands in stdin
 // sample commands
 // {"cmd":"write","model":" ctrl_neutral2","sid":"158d0000f865d8","token":"8","data":"{\"channel_0\":\"on\"}" }

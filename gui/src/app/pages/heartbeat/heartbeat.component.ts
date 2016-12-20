@@ -69,7 +69,6 @@ export class HeartbeatComponent implements OnInit {
     //on ecoute le service rest
     this._heartbeats.getAll().subscribe((all) => {
       this.heartbeats = all;
-      console.log(all);
       this.updateChart();
     });
 
