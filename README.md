@@ -1,6 +1,6 @@
 # Xiaomi Smart Home - GUI
 
-
+![Timeline](https://raw.githubusercontent.com/TwanoO67/xiaomi-smart-home-gui/master/docs/timeline.png)
 
 ## Lancer le projet avec Docker
 
