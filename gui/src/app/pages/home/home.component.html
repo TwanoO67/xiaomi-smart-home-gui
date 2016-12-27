@@ -1,3 +1,5 @@
+Commenter <button type="button" class="btn btn-default btn-flat" (click)="toggleModeCommentaire();"><i class="fa fa-edit"></i></button>
+
   <ul class="timeline">
 
     <template ngFor let-day [ngForOf]="dates" >
@@ -20,7 +22,7 @@
                 <span *ngIf="event.getData().status === 'motion' ">Début de passage</span>
                 <span *ngIf="event.getData().status === 'no_motion' ">Fin de passage</span>
               </h3>
-              <app-home-comment [event]='event' [write_mode]='true'></app-home-comment>
+              <app-home-comment [event]='event' [write_mode]='mode'></app-home-comment>
               <!--
 
               <div class="timeline-footer">
@@ -38,7 +40,7 @@
                 <a href="#" *ngIf="event.getData().status !== 'close'">Ouverture</a>
                 {{(event.sid | toDevice).name }}
               </h3>
-              <app-home-comment [event]='event' [write_mode]='true'></app-home-comment>
+              <app-home-comment [event]='event' [write_mode]='mode'></app-home-comment>
           </div>
 
         </template>
@@ -48,18 +50,20 @@
               <span class="time"><i class="fa fa-clock-o"></i> {{event.date | date : 'mediumTime' }}</span>
 
               <h3 class="timeline-header"><a href="#">Clic</a> {{(event.sid | toDevice).name }}</h3>
-              <app-home-comment [event]='event' [write_mode]='true'></app-home-comment>
+              <app-home-comment [event]='event' [write_mode]='mode'></app-home-comment>
           </div>
         </template>
         <template [ngSwitchCase]="'sensor_ht'">
-          <i class="fa fa-mouse-pointer bg-maroon"></i>
+          <i class="fa fa-thermometer-quarter bg-green"></i>
           <div class="timeline-item">
-              <span class="time"><i class="fa fa-thermometer-quarter"></i> {{event.date | date : 'mediumTime' }}</span>
+              <span class="time"><i class="fa fa-clock-o"></i> {{event.date | date : 'mediumTime' }}</span>
 
-              <h3 class="timeline-header"><a href="#">Temperature</a> {{(event.sid | toDevice).name }}</h3>
+              <h3 class="timeline-header">
+                <a href="#">Temperature</a> {{(event.sid | toDevice).name }}
+              </h3>
               <span *ngIf="event.getData().temperature">{{event.getData().temperature / 100 }} Degré</span>
               <span *ngIf="event.getData().humidity">{{event.getData().humidity / 100 }} %</span>
-              <app-home-comment [event]='event' [write_mode]='true'></app-home-comment>
+              <app-home-comment [event]='event' [write_mode]='mode'></app-home-comment>
           </div>
         </template>
         <template ngSwitchDefault>
@@ -72,7 +76,7 @@
                 <a href="#" >Evenement autre</a>
                 {{(event.sid | toDevice).name }}</h3>
 
-              <app-home-comment [event]='event' [write_mode]='true'></app-home-comment>
+              <app-home-comment [event]='event' [write_mode]='mode'></app-home-comment>
 
               <div class="timeline-footer">
                   {{event.data}}

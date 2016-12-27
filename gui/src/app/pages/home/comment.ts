@@ -9,6 +9,8 @@ import { XiaomiEventService } from "../../services/data/xiaomi_event.service";
   <div class="timeline-body" *ngIf="write_mode || event.comment.length > 0">
       <textarea *ngIf="write_mode" class="form-control" rows="2" placeholder="Commentaire" [(ngModel)]="event.comment" ></textarea>
       <span *ngIf="!write_mode" >{{event.comment}}</span>
+      <button type="button" class="btn btn-success btn-sm" (click)="save();"><i class="fa fa-check"></i></button>
+      <button type="button" class="btn btn-error btn-sm" (click)="cancel();"><i class="fa fa-times"></i></button>
   </div>
   `
 })
@@ -22,7 +24,18 @@ export class CommentComponent implements OnInit {
     this.event = new XiaomiEvent();
   }
 
+  private save(){
+    this._events.update(this.event.id,this.event).subscribe((data)=>{
+      console.log(data);
+    });
+  }
+
+  private cancel(){
+    this.event.comment = "";
+  }
+
   ngOnInit() {
+
    }
 
 }

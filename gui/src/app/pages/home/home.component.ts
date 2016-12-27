@@ -16,6 +16,8 @@ export class HomeComponent implements OnInit {
   public event_by_day: any;
   public dates : Array<string> = [];
 
+  public mode: boolean = false;//mode edition de commentaire
+
   constructor(
     private _bread_serv: BreadcrumbService,
     private _events: XiaomiEventService,
@@ -34,7 +36,6 @@ export class HomeComponent implements OnInit {
 
       //tri des données par jours
       this.event_by_day = {};
-      console.log(this.last_events);
       this.last_events.forEach((event)=>{
         let date: Date = new Date(event.date);
         let day = date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear();
@@ -45,8 +46,6 @@ export class HomeComponent implements OnInit {
         this.event_by_day[day].push(event);
 
       });
-      console.log(this.event_by_day);
-      //this.dates = this.dates.unique();
     });
 
     //on place le header
@@ -64,6 +63,10 @@ export class HomeComponent implements OnInit {
     });
 
 
+  }
+
+  private toggleModeCommentaire() {
+    this.mode =!this.mode;
   }
 
   ngOnDestroy(){
