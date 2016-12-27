@@ -9,19 +9,19 @@
         </span>
     </li>
     <!-- /.timeline-label -->
-    <template ngFor let-log [ngForOf]="log_by_day[day]">
-      <li [ngSwitch]="log.model">
+    <template ngFor let-event [ngForOf]="event_by_day[day]">
+      <li [ngSwitch]="event.model">
         <template [ngSwitchCase]="'motion'">
           <i class="fa fa-male bg-blue"></i>
           <div class="timeline-item">
-              <span class="time"><i class="fa fa-clock-o"></i> {{log.date | date : 'mediumTime' }}</span>
+              <span class="time"><i class="fa fa-clock-o"></i> {{event.date | date : 'mediumTime' }}</span>
 
-              <h3 class="timeline-header"><a href="#">Mouvement</a> {{(log.sid | toDevice).name }}</h3>
-
-              <div class="timeline-body">
-                <span *ngIf="log.getData().status === 'motion' ">Début de passage</span>
-                <span *ngIf="log.getData().status === 'no_motion' ">Fin de passage</span>
-              </div><!--
+              <h3 class="timeline-header"><a href="#">Mouvement</a> {{(event.sid | toDevice).name }}
+                <span *ngIf="event.getData().status === 'motion' ">Début de passage</span>
+                <span *ngIf="event.getData().status === 'no_motion' ">Fin de passage</span>
+              </h3>
+              <app-home-comment [event]='event' [write_mode]='true'></app-home-comment>
+              <!--
 
               <div class="timeline-footer">
                   <a class="btn btn-primary btn-xs">...</a>
@@ -29,37 +29,53 @@
           </div>
         </template>
         <template [ngSwitchCase]="'magnet'">
-          <i [ngClass]="{'fa':true, 'bg-maroon':true, 'fa-lock': log.getData().status === 'close',  'fa-unlock': log.getData().status !== 'close'}" ></i>
+          <i [ngClass]="{'fa':true, 'bg-maroon':true, 'fa-lock': event.getData().status === 'close',  'fa-unlock': event.getData().status !== 'close'}" ></i>
           <div class="timeline-item">
-              <span class="time"><i class="fa fa-clock-o"></i> {{log.date | date : 'mediumTime' }}</span>
+              <span class="time"><i class="fa fa-clock-o"></i> {{event.date | date : 'mediumTime' }}</span>
 
               <h3 class="timeline-header">
-                <a href="#" *ngIf="log.getData().status === 'close'">Fermeture</a>
-                <a href="#" *ngIf="log.getData().status !== 'close'">Ouverture</a>
-                {{(log.sid | toDevice).name }}
+                <a href="#" *ngIf="event.getData().status === 'close'">Fermeture</a>
+                <a href="#" *ngIf="event.getData().status !== 'close'">Ouverture</a>
+                {{(event.sid | toDevice).name }}
               </h3>
+              <app-home-comment [event]='event' [write_mode]='true'></app-home-comment>
           </div>
+
         </template>
         <template [ngSwitchCase]="'switch'">
           <i class="fa fa-mouse-pointer bg-maroon"></i>
           <div class="timeline-item">
-              <span class="time"><i class="fa fa-clock-o"></i> {{log.date | date : 'mediumTime' }}</span>
+              <span class="time"><i class="fa fa-clock-o"></i> {{event.date | date : 'mediumTime' }}</span>
 
-              <h3 class="timeline-header"><a href="#">Clic</a> {{(log.sid | toDevice).name }}</h3>
+              <h3 class="timeline-header"><a href="#">Clic</a> {{(event.sid | toDevice).name }}</h3>
+              <app-home-comment [event]='event' [write_mode]='true'></app-home-comment>
+          </div>
+        </template>
+        <template [ngSwitchCase]="'sensor_ht'">
+          <i class="fa fa-mouse-pointer bg-maroon"></i>
+          <div class="timeline-item">
+              <span class="time"><i class="fa fa-thermometer-quarter"></i> {{event.date | date : 'mediumTime' }}</span>
+
+              <h3 class="timeline-header"><a href="#">Temperature</a> {{(event.sid | toDevice).name }}</h3>
+              <span *ngIf="event.getData().temperature">{{event.getData().temperature / 100 }} Degré</span>
+              <span *ngIf="event.getData().humidity">{{event.getData().humidity / 100 }} %</span>
+              <app-home-comment [event]='event' [write_mode]='true'></app-home-comment>
           </div>
         </template>
         <template ngSwitchDefault>
           <!-- timeline icon -->
           <i class="fa fa-lock bg-maroon"></i>
           <div class="timeline-item">
-              <span class="time"><i class="fa fa-clock-o"></i> {{log.date | date : 'mediumTime' }}</span>
+              <span class="time"><i class="fa fa-clock-o"></i> {{event.date | date : 'mediumTime' }}</span>
 
               <h3 class="timeline-header">
                 <a href="#" >Evenement autre</a>
-                {{(log.sid | toDevice).name }}</h3>
+                {{(event.sid | toDevice).name }}</h3>
 
-              <div class="timeline-body">
-                  {{log.data}}
+              <app-home-comment [event]='event' [write_mode]='true'></app-home-comment>
+
+              <div class="timeline-footer">
+                  {{event.data}}
               </div>
           </div>
         </template>

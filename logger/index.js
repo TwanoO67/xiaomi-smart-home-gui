@@ -12,8 +12,8 @@ var path = require('path');
 var db = new sqlite3.Database(path.join(__dirname, '..', 'db', 'database.db'));
 
 db.serialize(function() {
-  db.run("CREATE TABLE IF NOT EXISTS xiaomi_events (id INTEGER PRIMARY KEY AUTOINCREMENT, date INTEGER, sid TEXT, model TEXT, cmd TEXT,data TEXT, createdAt INTEGER, updatedAt INTEGER)");
-  db.run("CREATE TABLE IF NOT EXISTS xiaomi_devices (sid TEXT PRIMARY KEY, name TEXT, model TEXT, createdAt INTEGER, updatedAt INTEGER)");
+  db.run("CREATE TABLE IF NOT EXISTS xiaomi_events (id INTEGER PRIMARY KEY AUTOINCREMENT, date INTEGER, comment TEXT, sid TEXT, model TEXT, cmd TEXT,data TEXT, createdAt INTEGER, updatedAt INTEGER)");
+  db.run("CREATE TABLE IF NOT EXISTS xiaomi_devices (sid TEXT PRIMARY KEY, name TEXT, model TEXT, hide interger, createdAt INTEGER, updatedAt INTEGER)");
   db.run("CREATE TABLE IF NOT EXISTS xiaomi_heartbeats (id INTEGER PRIMARY KEY AUTOINCREMENT, sid TEXT, model TEXT, is_last_state INTEGER, data TEXT, interval_begin_date INTEGER, interval_end_date INTEGER, last_heartbeat_date INTEGER, createdAt INTEGER, updatedAt INTEGER)");
 });
 

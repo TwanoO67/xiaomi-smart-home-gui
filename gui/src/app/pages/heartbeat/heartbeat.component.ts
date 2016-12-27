@@ -87,6 +87,11 @@ export class HeartbeatComponent implements OnInit {
     });
   }
 
+  //reduis les timestamp a un par 10sec
+  private cutTS(ts: number): number{
+    return Math.floor(ts/10000);
+  }
+
   updateChart(){
     if(this.devices && this.heartbeats){
       this.lineChartData = [];
@@ -97,48 +102,55 @@ export class HeartbeatComponent implements OnInit {
         }
         let mydata = [];
         let mylabel = [];
+        let max = 0;
+        let min = 9999999999999;
         this.heartbeats.forEach((hb) => {
           console.log(hb);
           if(device.sid == hb.sid ){
               let value = 0;
+              //on recuperere les ts max et min, concernant ce device
+              if(hb.interval_begin_date < 0){
+                if(hb.interval_begin_date > max){
+                  max = hb.interval_begin_date;
+                }
+                if(hb.interval_begin_date < min){
+                  min = hb.interval_begin_date;
+                }
+              }
+              if(hb.interval_end_date < 0){
+                if(hb.interval_end_date > max){
+                  max = hb.interval_end_date;
+                }
+                if(hb.interval_end_date < min){
+                  min = hb.interval_end_date;
+                }
+              }
               if(device.model === "motion"){
                 if( hb.getData().status !== "no_motion" ){
                   mydata.push(1);
-                  mylabel.push(hb.interval_begin_date);
-                  mydata.push(1);
-                  mylabel.push(hb.interval_end_date);
                 }
                 else{
                   mydata.push(0);
-                  mylabel.push(hb.interval_begin_date);
-                  mydata.push(0);
-                  mylabel.push(hb.interval_end_date);
                 }
               }
               else if(device.model === "magnet"){
                 if( hb.getData().status !== "close" ){
                   mydata.push(1);
-                  mylabel.push(hb.interval_begin_date);
-                  mydata.push(1);
-                  mylabel.push(hb.interval_end_date);
                 }
                 else{
                   mydata.push(0);
-                  mylabel.push(hb.interval_begin_date);
-                  mydata.push(0);
-                  mylabel.push(hb.interval_end_date);
                 }
               }
               else{
                 mydata.push(hb.getData().status);
-                mylabel.push(hb.interval_begin_date);
-                mydata.push(hb.getData().status);
-                mylabel.push(hb.interval_end_date);
               }
 
           }
         });
         console.log(mydata);
+        for(let i=this.cutTS(min); i<this.cutTS(max); i = i+10 ){
+          mylabel.push(i);
+        }
         this.lineChartData.push({data: mydata, label: "Ma série "+device.model});
         this.lineChartLabels = mylabel;
 

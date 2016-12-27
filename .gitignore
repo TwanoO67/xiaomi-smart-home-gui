@@ -3,3 +3,4 @@ node_modules
 gui/node_modules
 gui/dist
 db/database.db
+gui/src/environments/environment.*.ts

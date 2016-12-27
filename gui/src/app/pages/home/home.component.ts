@@ -13,7 +13,7 @@ export class HomeComponent implements OnInit {
   public date: Date = new Date();
 
   public last_events : Array<XiaomiEvent> = [];
-  public log_by_day: any;
+  public event_by_day: any;
   public dates : Array<string> = [];
 
   constructor(
@@ -33,19 +33,19 @@ export class HomeComponent implements OnInit {
       this.last_events = all;
 
       //tri des données par jours
-      this.log_by_day = {};
+      this.event_by_day = {};
       console.log(this.last_events);
-      this.last_events.forEach((log)=>{
-        let date: Date = new Date(log.date);
+      this.last_events.forEach((event)=>{
+        let date: Date = new Date(event.date);
         let day = date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear();
-        if(typeof this.log_by_day[day] === "undefined"){
-          this.log_by_day[day] = [];
+        if(typeof this.event_by_day[day] === "undefined"){
+          this.event_by_day[day] = [];
           this.dates.push(day);
         }
-        this.log_by_day[day].push(log);
+        this.event_by_day[day].push(event);
 
       });
-      console.log(this.log_by_day);
+      console.log(this.event_by_day);
       //this.dates = this.dates.unique();
     });
 

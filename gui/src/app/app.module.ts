@@ -27,6 +27,7 @@ import { NotificationBoxComponent } from "./widgets/notification-box";
 import { TasksBoxComponent } from "./widgets/tasks-box";
 import { UserBoxComponent } from "./widgets/user-box";
 import { BreadcrumbComponent } from "./widgets/breadcrumb";
+import { CommentComponent } from './pages/home/comment';
 
 let widgets = [
   AppComponent,
@@ -36,7 +37,8 @@ let widgets = [
   NotificationBoxComponent,
   TasksBoxComponent,
   UserBoxComponent,
-  BreadcrumbComponent
+  BreadcrumbComponent,
+  CommentComponent
 ];
 
 import { UserService } from "./services/user.service";

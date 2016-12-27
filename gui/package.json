@@ -5,7 +5,8 @@
   "angular-cli": {},
   "scripts": {
     "start": "ng serve",
-    "prod": "ng build --prod && cp -r dist/* ../api/gui/",
+    "dev": "ng serve --env=dev",
+    "build": "ng build --prod && rm -rf ../api/gui/* && cp -r dist/* ../api/gui/",
     "lint": "tslint \"src/**/*.ts\"",
     "test": "ng test",
     "pree2e": "webdriver-manager update",
