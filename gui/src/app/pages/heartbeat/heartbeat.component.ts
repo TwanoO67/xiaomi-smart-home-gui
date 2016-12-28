@@ -12,13 +12,16 @@ import { XiaomiHeartbeatService } from "../../services/data/xiaomi_heartbeat.ser
 export class HeartbeatComponent implements OnInit {
   private heartbeats: Array<XiaomiHeartbeat> = [];
   private devices: Array<XiaomiDevice> = [];
+  private graphs: Array<any> = [];
+
   // lineChart
-  public lineChartData:Array<any> = [
+  /*public lineChartData:Array<any> = [
     {data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A'},
     {data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B'},
     {data: [18, 48, 77, 9, 100, 27, 40], label: 'Series C'}
   ];
   public lineChartLabels:Array<any> = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+  */
   public lineChartOptions:any = {
     animation: false,
     responsive: true
@@ -93,38 +96,22 @@ export class HeartbeatComponent implements OnInit {
   }
 
   updateChart(){
+    console.log("on recrée le graph");
+    this.graphs = [];
     if(this.devices && this.heartbeats){
-      this.lineChartData = [];
-      // une série pas device
+      // une série par device
       this.devices.forEach((device) => {
         if((device.model !== "motion" && device.model !== "magnet")){
           return true;
         }
         let mydata = [];
+        let mydata2 = [];
         let mylabel = [];
-        let max = 0;
-        let min = 9999999999999;
         this.heartbeats.forEach((hb) => {
-          console.log(hb);
+
           if(device.sid == hb.sid ){
-              let value = 0;
-              //on recuperere les ts max et min, concernant ce device
-              if(hb.interval_begin_date < 0){
-                if(hb.interval_begin_date > max){
-                  max = hb.interval_begin_date;
-                }
-                if(hb.interval_begin_date < min){
-                  min = hb.interval_begin_date;
-                }
-              }
-              if(hb.interval_end_date < 0){
-                if(hb.interval_end_date > max){
-                  max = hb.interval_end_date;
-                }
-                if(hb.interval_end_date < min){
-                  min = hb.interval_end_date;
-                }
-              }
+              mylabel.push(hb.interval_begin_date);
+
               if(device.model === "motion"){
                 if( hb.getData().status !== "no_motion" ){
                   mydata.push(1);
@@ -141,18 +128,31 @@ export class HeartbeatComponent implements OnInit {
                   mydata.push(0);
                 }
               }
+              else if(device.model === "sensor_ht"){
+                mydata.push(hb.getData().temperature);
+                mydata2.push(hb.getData().humidity);
+              }
               else{
+                console.log('traitement non pris');
+                console.log(hb);
                 mydata.push(hb.getData().status);
               }
 
           }
         });
-        console.log(mydata);
-        for(let i=this.cutTS(min); i<this.cutTS(max); i = i+10 ){
-          mylabel.push(i);
+
+        let new_graph: any = {};
+        new_graph.lineChartData = [];
+        new_graph.lineChartData.push({data: mydata, label: "Ma série "+device.model});
+        if(mydata2.length > 0){
+          new_graph.lineChartData.push({data: mydata2, label: "Ma série 2 "+device.model});
         }
-        this.lineChartData.push({data: mydata, label: "Ma série "+device.model});
-        this.lineChartLabels = mylabel;
+        new_graph.lineChartLabels = mylabel;
+        new_graph.lineChartColors = this.lineChartColors;
+        new_graph.lineChartOptions = this.lineChartOptions;
+        new_graph.lineChartType = this.lineChartType;
+        new_graph.lineChartLegend = this.lineChartLegend;
+        this.graphs.push(new_graph);
 
       });
 

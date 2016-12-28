@@ -1,23 +1,26 @@
+
+<template ngFor let-graph ngForOf="graphs">
 <div class="row">
   <div class="col-md-6">
     <div style="display: block;">
     <canvas baseChart width="400" height="400"
-                [datasets]="lineChartData"
-                [labels]="lineChartLabels"
-                [options]="lineChartOptions"
-                [colors]="lineChartColors"
-                [legend]="lineChartLegend"
-                [chartType]="lineChartType" ></canvas>
+                [datasets]="graph.lineChartData"
+                [labels]="graph.lineChartLabels"
+                [options]="graph.lineChartOptions"
+                [colors]="graph.lineChartColors"
+                [legend]="graph.lineChartLegend"
+                [chartType]="graph.lineChartType" ></canvas>
     </div>
   </div>
   <div class="col-md-6" style="margin-bottom: 10px">
     <table class="table table-responsive table-condensed">
       <tr>
-        <th *ngFor="let label of lineChartLabels"></th>
+        <th *ngFor="let label of graph.lineChartLabels"></th>
       </tr>
-      <tr *ngFor="let d of lineChartData">
+      <tr *ngFor="let d of graph.lineChartData">
         <td *ngFor="let label of lineChartLabels; let j=index"></td>
       </tr>
     </table>
   </div>
 </div>
+</template>
