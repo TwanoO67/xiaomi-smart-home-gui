@@ -69,11 +69,12 @@ function updateState(json){
     return true;
   }
 
+  //recupere le dernier eartbeat de ce device
   db.all(" SELECT * from xiaomi_heartbeats WHERE sid = '"+json['sid']+"' AND is_last_state = 1 ", function(err, rows) {
       var now = Date.now();//on fixe la microseconde
       if(err){
         console.error(err);
-        exit;
+        return true;
       }
       //si aucune ligne
       if(rows.length == 0){
@@ -90,6 +91,13 @@ function updateState(json){
         }
         //si non
         else{
+
+          //filtre sur les devices qui bougent trop souvent
+          let miniDelay = 60*5;
+          if(json['model']==="sensor_ht" && (row.interval_begin_date + miniDelay) > now ){
+            return true;
+          }
+
           //on pop un event (le changement d'etat)
           popInterestingEvent(json);
           //on ferme l'interval

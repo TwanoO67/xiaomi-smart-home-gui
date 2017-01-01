@@ -95,7 +95,39 @@ export class HeartbeatComponent implements OnInit {
     return Math.floor(ts/10000);
   }
 
-  updateChart(){
+  private getGraphDataforHB(hb: XiaomiHeartbeat){
+    let data = {
+      line1: null,
+      line2: null
+    };
+    if(hb.model === "motion"){
+      if( hb.getData().status !== "no_motion" ){
+        data.line1 = 1;
+      }
+      else{
+        data.line1 = 0;
+      }
+    }
+    else if(hb.model === "magnet"){
+      if( hb.getData().status !== "close" ){
+        data.line1 = 1;
+      }
+      else{
+        data.line1 = 0;
+      }
+    }
+    else if(hb.model === "sensor_ht"){
+      data.line1 = hb.getData().temperature;
+      data.line2 = hb.getData().humidity;
+    }
+    else{
+      console.log('traitement non pris');
+      console.log(hb);
+    }
+    return data;
+  }
+
+  private updateChart(){
     console.log("on recrée le graph");
     this.graphs = [];
     if(this.devices && this.heartbeats){
@@ -110,33 +142,27 @@ export class HeartbeatComponent implements OnInit {
         this.heartbeats.forEach((hb) => {
 
           if(device.sid == hb.sid ){
+              //Ajout du point de début
               mylabel.push(hb.interval_begin_date);
+              let data = this.getGraphDataforHB(hb);
+              if(data.line1){
+                mydata.push(data.line1);
+              }
+              if(data.line2){
+                mydata2.push(data.line2);
+              }
 
-              if(device.model === "motion"){
-                if( hb.getData().status !== "no_motion" ){
-                  mydata.push(1);
+              //si l'interval est fini on ajoute aussi le point final (avec les meme data)
+              if(hb.interval_end_date > 0){
+                mylabel.push(hb.interval_end_date);
+                if(data.line1){
+                  mydata.push(data.line1);
                 }
-                else{
-                  mydata.push(0);
-                }
-              }
-              else if(device.model === "magnet"){
-                if( hb.getData().status !== "close" ){
-                  mydata.push(1);
-                }
-                else{
-                  mydata.push(0);
+                if(data.line2){
+                  mydata2.push(data.line2);
                 }
               }
-              else if(device.model === "sensor_ht"){
-                mydata.push(hb.getData().temperature);
-                mydata2.push(hb.getData().humidity);
-              }
-              else{
-                console.log('traitement non pris');
-                console.log(hb);
-                mydata.push(hb.getData().status);
-              }
+
 
           }
         });
