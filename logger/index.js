@@ -77,7 +77,7 @@ function updateState(json,type=""){
         return true;
       }
       //si aucune ligne
-      if(rows.length == 0){
+      if(rows.length <= 0){
         //on crée un nouvel interval
         interval_begin.run(json['sid'],json['model'],json['data'],now,now,type);
       }
@@ -94,12 +94,15 @@ function updateState(json,type=""){
 
           //filtre sur les devices qui bougent trop souvent
           let miniDelay = 60*5;
-          if(json['model']==="sensor_ht" && (row.interval_begin_date + miniDelay) > now ){
+          if(json['model']==="sensor_ht" && (row.interval_begin_date + miniDelay) < now ){
             return true;
           }
 
-          //on pop un event (le changement d'etat)
-          popInterestingEvent(json);
+          //on pop un event (le changement d'etat) sauf pour les sensor de temperature
+          if(json['model']!=="sensor_ht"){
+            popInterestingEvent(json);
+          }
+
           //on ferme l'interval
           interval_end.run(now,now,row.id);
           //puis on crée un nouveau avec les new data

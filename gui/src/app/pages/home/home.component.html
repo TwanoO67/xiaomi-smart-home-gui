@@ -59,10 +59,12 @@ Commenter <button type="button" class="btn btn-default btn-flat" (click)="toggle
               <span class="time"><i class="fa fa-clock-o"></i> {{event.date | date : 'mediumTime' }}</span>
 
               <h3 class="timeline-header">
-                <a href="#">Temperature</a> {{(event.sid | toDevice).name }}
+                <a href="#" *ngIf="event.data_type==='temperature'">Temperature</a>
+                <a href="#" *ngIf="event.data_type==='humidity'">Humidity</a>
+                {{(event.sid | toDevice).name }}
               </h3>
-              <span *ngIf="event.getData().temperature">{{event.getData().temperature / 100 }} Degré</span>
-              <span *ngIf="event.getData().humidity">{{event.getData().humidity / 100 }} %</span>
+              <span *ngIf="event.data && event.data_type==='temperature'">{{event.data / 100 }} Degré</span>
+              <span *ngIf="event.data && event.data_type==='humidity'">{{event.data / 100 }} %</span>
               <app-home-comment [event]='event' [write_mode]='mode'></app-home-comment>
           </div>
         </template>

@@ -4,6 +4,7 @@ export class XiaomiEvent{
   public sid: string = "";
   public model: string = "";
   public cmd: string = "";
+  public data_type: string = "";
   public data: string = "";
   public comment: string = "";
   public createdAt: number = 0;

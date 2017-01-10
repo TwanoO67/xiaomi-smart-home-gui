@@ -7,6 +7,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     date: DataTypes.INTEGER,
     sid: DataTypes.TEXT,
+    data_type: DataTypes.TEXT,
     model: DataTypes.TEXT,
     cmd: DataTypes.TEXT,
     data: DataTypes.TEXT
