@@ -72,7 +72,7 @@ export class HeartbeatComponent implements OnInit {
     //on ecoute le service rest
     this._heartbeats.getAll().subscribe((all) => {
       this.heartbeats = all;
-      this.updateChart();
+      //this.updateChart();
     });
 
     //on place le header
@@ -143,7 +143,7 @@ export class HeartbeatComponent implements OnInit {
 
           if(device.sid == hb.sid ){
               //Ajout du point de début
-              mylabel.push(hb.interval_begin_date);
+              mylabel.push(hb.interval_begin_date+"");
               let data = this.getGraphDataforHB(hb);
               if(data.line1){
                 mydata.push(data.line1);
@@ -179,6 +179,9 @@ export class HeartbeatComponent implements OnInit {
         new_graph.lineChartType = this.lineChartType;
         new_graph.lineChartLegend = this.lineChartLegend;
         this.graphs.push(new_graph);
+
+        this.graphs = ["test","1","2"]
+        console.log(this.graphs);
 
       });
 

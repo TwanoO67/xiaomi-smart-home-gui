@@ -14,13 +14,13 @@ var db = new sqlite3.Database(path.join(__dirname, '..', 'db', 'database.db'));
 db.serialize(function() {
   db.run("CREATE TABLE IF NOT EXISTS xiaomi_events (id INTEGER PRIMARY KEY AUTOINCREMENT, date INTEGER, comment TEXT, sid TEXT, model TEXT, cmd TEXT,data TEXT, createdAt INTEGER, updatedAt INTEGER)");
   db.run("CREATE TABLE IF NOT EXISTS xiaomi_devices (sid TEXT PRIMARY KEY, name TEXT, model TEXT, hide INTEGER, createdAt INTEGER, updatedAt INTEGER)");
-  db.run("CREATE TABLE IF NOT EXISTS xiaomi_heartbeats (id INTEGER PRIMARY KEY AUTOINCREMENT, sid TEXT, model TEXT, is_last_state INTEGER, data TEXT, interval_begin_date INTEGER, interval_end_date INTEGER, last_heartbeat_date INTEGER, createdAt INTEGER, updatedAt INTEGER)");
+  db.run("CREATE TABLE IF NOT EXISTS xiaomi_heartbeats (id INTEGER PRIMARY KEY AUTOINCREMENT, sid TEXT, model TEXT, data_type TEXT, is_last_state INTEGER, data TEXT, interval_begin_date INTEGER, interval_end_date INTEGER, last_heartbeat_date INTEGER, createdAt INTEGER, updatedAt INTEGER)");
 });
 
 var event_log_insert = db.prepare("INSERT INTO xiaomi_events (date,sid,model,cmd,data,createdAt) VALUES (?,?,?,?,?,strftime('%s','now'))");
 var device_insert = db.prepare("INSERT OR IGNORE INTO xiaomi_devices (sid,name,model,createdAt) VALUES (?,?,?,strftime('%s','now'))");
 var device_update_model = db.prepare("UPDATE xiaomi_devices SET model = ?, updatedAt = strftime('%s','now') WHERE sid = ?");
-var interval_begin = db.prepare("INSERT INTO xiaomi_heartbeats (sid,model,data,interval_begin_date,last_heartbeat_date,is_last_state,createdAt) VALUES (?,?,?,?,?,1,strftime('%s','now'))");
+var interval_begin = db.prepare("INSERT INTO xiaomi_heartbeats (sid,model,data,interval_begin_date,last_heartbeat_date,data_type,is_last_state,createdAt) VALUES (?,?,?,?,?,?,1,strftime('%s','now'))");
 var interval_update_hb = db.prepare("UPDATE xiaomi_heartbeats SET last_heartbeat_date=? , updatedAt = strftime('%s','now') WHERE id=?");
 var interval_end = db.prepare("UPDATE xiaomi_heartbeats SET last_heartbeat_date=?, interval_end_date=?, is_last_state=0 , updatedAt = strftime('%s','now') WHERE id=? ");
 //db.close();
@@ -62,14 +62,14 @@ function popInterestingEvent(json){
   event_log_insert.run(Date.now(),json['sid'], json['model'], json['cmd'], json['data']);
 }
 
-function updateState(json){
+function updateState(json,type=""){
   //ici on retire certain event, nottament les button (on ne veut pas suivre les periodes de non-appuie..)
   if(json['model'] === "switch" && json['data'] !== "{}"){
     popInterestingEvent(json);
     return true;
   }
 
-  //recupere le dernier eartbeat de ce device
+  //recupere le dernier heartbeat de ce device
   db.all(" SELECT * from xiaomi_heartbeats WHERE sid = '"+json['sid']+"' AND is_last_state = 1 ", function(err, rows) {
       var now = Date.now();//on fixe la microseconde
       if(err){
@@ -79,7 +79,7 @@ function updateState(json){
       //si aucune ligne
       if(rows.length == 0){
         //on crée un nouvel interval
-        interval_begin.run(json['sid'],json['model'],json['data'],now,now);
+        interval_begin.run(json['sid'],json['model'],json['data'],now,now,type);
       }
       //si on a deja une ligne
       else{
@@ -103,7 +103,7 @@ function updateState(json){
           //on ferme l'interval
           interval_end.run(now,now,row.id);
           //puis on crée un nouveau avec les new data
-          interval_begin.run(json['sid'],json['model'],json['data'],now,now);
+          interval_begin.run(json['sid'],json['model'],json['data'],now,now,type);
 
         }
       }
@@ -157,8 +157,24 @@ serverSocket.on('message', function(msg, rinfo){
       //on update ici le model des devices car on a demandé un etat des lieux
       device_update_model.run(json['model'],json['sid']);
     }
-    //necessaire pour le motion (entre autre), mais a eviter pour le button
-    updateState(json);
+
+    //pour les capteurs multiple on enregistre separement les etats
+    if(json['model']=="sensor_ht"){
+      let copy = JSON.parse(JSON.stringify(json));//deep clone
+      let datadec = JSON.parse(json['data']);
+      if(typeof datadec['temperature'] !== "undefined"){
+        copy['data'] = datadec['temperature'];
+        updateState(copy,'temperature');
+      }
+      if(typeof datadec['humidity'] !== "undefined"){
+        copy['data'] = datadec['humidity'];
+        updateState(copy,'humidity');
+      }
+    }
+    //sinon on enregistre tout
+    else{
+      updateState(json,'');//necessaire pour le motion (entre autre), mais a eviter pour le button
+    }
     printLog(json);
   }
   //ici on se sert du logger pour passer des command a la gateway correspondant au bon sid
