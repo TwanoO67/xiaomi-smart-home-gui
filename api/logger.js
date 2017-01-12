@@ -52,7 +52,7 @@ function popInterestingEvent(json){
     cmd: json['cmd'],
     data: JSON.parse(json['data'])
   });
-  evenement.save();
+  evenement.save(function(result){console.log(result)});;
 }
 
 function updateState(json,type=""){
@@ -77,7 +77,7 @@ function updateState(json,type=""){
         //on verifie si data sont les memes
         if(hb.data === decdata ){
           //si oui on update la date de updatedAt
-          hb.save();
+          hb.save(function(result){console.log(result)});;
         }
         //si non
         else{
@@ -95,7 +95,7 @@ function updateState(json,type=""){
 
           //on ferme l'interval
           hb.interval_end_date = now;
-          hb.save();
+          hb.save(function(result){console.log(result)});;
           //puis on crée un nouveau avec les new data
           neednew = true;
         }
@@ -110,7 +110,7 @@ function updateState(json,type=""){
           data: decdata ,
           interval_begin_date: now
         });
-        HB.save();
+        HB.save(function(result){console.log(result)});;
       }
   });
 }
@@ -140,7 +140,7 @@ serverSocket.on('message', function(msg, rinfo){
       name: "Unknown Gateway",
       model: "gateway"
     });
-    dev.save();
+    dev.save(function(result){console.log(result)});;
 
     console.log('Step 3. Send %s to %s:%d', cmd, address, port);
     serverSocket.send(cmd, 0, cmd.length, port, address);
@@ -155,7 +155,7 @@ serverSocket.on('message', function(msg, rinfo){
         sid: json['sid'],
         name: "Unknown Device"
       });
-      dev.save();
+      dev.save(function(result){console.log(result)});;
 
       //on demande a chaque device son etat
       var response = '{"cmd":"read", "sid":"' + sid + '"}';
@@ -171,9 +171,10 @@ serverSocket.on('message', function(msg, rinfo){
   else if (cmd === 'read_ack' || cmd === 'report' || cmd === 'heartbeat') {
     if (cmd === 'read_ack') {
       //on update ici le model des devices car on a demandé un etat des lieux
-      var dev = MDevice.find({sid:json['sid'] });
-      dev.model = json['model'];
-      dev.save();
+      MDevice.findOne({sid:json['sid'] },function(err,ver){
+        dev.model = json['model'];
+        dev.save(function(result){console.log(result)});
+      });
     }
 
     //pour les capteurs multiple on enregistre separement les etats

@@ -1,4 +1,4 @@
 gui
-
+mongodb
 #si on ignore les nodes_modules, ils seront télécahrgé à la construction de l'image par install.sh
 #node_modules
