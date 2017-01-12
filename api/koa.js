@@ -9,6 +9,7 @@ app.use(serve('gui'));
 //connexion à mongoose
 mongoUrl = '127.0.0.1:27017';
 mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
 mongoose.connect(mongoUrl);
 koaRestMongoose = require('koa-rest-mongoose');
 
@@ -20,8 +21,8 @@ fs.readdirSync(__dirname+"/mongo_models")
   })
   .forEach(function(file) {
     var name = file.split('.js')[0];
-    var init_model = require('./mongo_models/'+name);
-    init_model(mongoose,koaRestMongoose,app,router);
+    var model = require('./mongo_models/'+name)(mongoose);
+    koaRestMongoose(app,router,model,"/api");
   });
 
 app.listen(3000);

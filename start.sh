@@ -5,4 +5,4 @@
 node api/koa.js &
 
 #Lancement du logger
-node logger/index.js
+node api/logger.js

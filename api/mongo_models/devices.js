@@ -1,4 +1,4 @@
-module.exports = function(mongoose,genApi,app,router){
+module.exports = function(mongoose){
   schema = new mongoose.Schema({
     sid: String,
     name: String,
@@ -7,5 +7,5 @@ module.exports = function(mongoose,genApi,app,router){
 
   model = mongoose.model('devices', schema);
 
-  genApi(app,router,model,"/api");
+  return model;
 }

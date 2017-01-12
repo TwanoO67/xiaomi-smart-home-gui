@@ -6,24 +6,16 @@ const multicastPort = 4321;
 var sidToAddress = {};
 var sidToPort = {};
 
-var sqlite3 = require('sqlite3').verbose();
-var path = require('path');
-// specify current directory explicitly
-var db = new sqlite3.Database(path.join(__dirname, '..', 'db', 'database.db'));
+//connexion à mongoose
+mongoUrl = '127.0.0.1:27017';
+mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+mongoose.connect(mongoUrl);
 
-db.serialize(function() {
-  db.run("CREATE TABLE IF NOT EXISTS xiaomi_events (id INTEGER PRIMARY KEY AUTOINCREMENT, date INTEGER, comment TEXT, sid TEXT, model TEXT, cmd TEXT,data TEXT, createdAt INTEGER, updatedAt INTEGER)");
-  db.run("CREATE TABLE IF NOT EXISTS xiaomi_devices (sid TEXT PRIMARY KEY, name TEXT, model TEXT, hide INTEGER, createdAt INTEGER, updatedAt INTEGER)");
-  db.run("CREATE TABLE IF NOT EXISTS xiaomi_heartbeats (id INTEGER PRIMARY KEY AUTOINCREMENT, sid TEXT, model TEXT, data_type TEXT, is_last_state INTEGER, data TEXT, interval_begin_date INTEGER, interval_end_date INTEGER, last_heartbeat_date INTEGER, createdAt INTEGER, updatedAt INTEGER)");
-});
-
-var event_log_insert = db.prepare("INSERT INTO xiaomi_events (date,sid,model,cmd,data,createdAt) VALUES (?,?,?,?,?,strftime('%s','now'))");
-var device_insert = db.prepare("INSERT OR IGNORE INTO xiaomi_devices (sid,name,model,createdAt) VALUES (?,?,?,strftime('%s','now'))");
-var device_update_model = db.prepare("UPDATE xiaomi_devices SET model = ?, updatedAt = strftime('%s','now') WHERE sid = ?");
-var interval_begin = db.prepare("INSERT INTO xiaomi_heartbeats (sid,model,data,interval_begin_date,last_heartbeat_date,data_type,is_last_state,createdAt) VALUES (?,?,?,?,?,?,1,strftime('%s','now'))");
-var interval_update_hb = db.prepare("UPDATE xiaomi_heartbeats SET last_heartbeat_date=? , updatedAt = strftime('%s','now') WHERE id=?");
-var interval_end = db.prepare("UPDATE xiaomi_heartbeats SET last_heartbeat_date=?, interval_end_date=?, is_last_state=0 , updatedAt = strftime('%s','now') WHERE id=? ");
-//db.close();
+//Recuperation des modeles
+var MEvent = require("./mongo_models/events")(mongoose);
+var MDevice = require("./mongo_models/devices")(mongoose);
+var MHeartbeat = require("./mongo_models/heartbeats")(mongoose);
 
 //interprete les log en fonctions du type
 function printLog(json){
@@ -58,8 +50,13 @@ function popInterestingEvent(json){
   //TODO
 
   //ici il faudra faire les actions !!! verification de scenario etc...
-
-  event_log_insert.run(Date.now(),json['sid'], json['model'], json['cmd'], json['data']);
+  var evenement = new MEvent({
+    sid: json['sid'],
+    model: json['model'],
+    cmd: json['cmd'],
+    data: json['data']
+  });
+  evenement.save();
 }
 
 function updateState(json,type=""){
@@ -70,31 +67,28 @@ function updateState(json,type=""){
   }
 
   //recupere le dernier heartbeat de ce device
-  db.all(" SELECT * from xiaomi_heartbeats WHERE sid = '"+json['sid']+"' AND is_last_state = 1 ", function(err, rows) {
+  MHeartbeat.findOne({sid: json['sid'], is_last_state: true },function(err, hb) {
       var now = Date.now();//on fixe la microseconde
       if(err){
         console.error(err);
         return true;
       }
       //si aucune ligne
-      if(rows.length <= 0){
-        //on crée un nouvel interval
-        interval_begin.run(json['sid'],json['model'],json['data'],now,now,type);
-      }
+      var decdata = JSON.parse(json['data']);
+      var neednew = false;
       //si on a deja une ligne
-      else{
+      if(hb){
         //on verifie si data sont les memes
-        var row = rows[0];
-        if(row.data === json['data']){
-          //si oui on update la date de last_heartbeat_date
-          interval_update_hb.run(now,row.id);
+        if(hb.data === decdata ){
+          //si oui on update la date de updatedAt
+          hb.save();
         }
         //si non
         else{
 
           //filtre sur les devices qui bougent trop souvent
           let miniDelay = 60*5;
-          if(json['model']==="sensor_ht" && (row.interval_begin_date + miniDelay) < now ){
+          if(json['model']==="sensor_ht" && (hb.interval_begin_date + miniDelay) < now ){
             return true;
           }
 
@@ -104,11 +98,23 @@ function updateState(json,type=""){
           }
 
           //on ferme l'interval
-          interval_end.run(now,now,row.id);
+          hb.interval_end_date = now;
+          hb.save();
           //puis on crée un nouveau avec les new data
-          interval_begin.run(json['sid'],json['model'],json['data'],now,now,type);
-
+          neednew = true;
         }
+      }
+      if(!hb || neednew){
+        //on crée un nouvel interval
+        var HB = new MHeartbeat({
+          sid: json['sid'],
+          model: json['model'],
+          data_type: type,
+          is_last_state: true,
+          data: decdata ,
+          interval_begin_date: now
+        });
+        HB.save();
       }
   });
 }
@@ -132,7 +138,14 @@ serverSocket.on('message', function(msg, rinfo){
     var port = json['port'];
     //on lui demande la liste de ses devices
     var cmd = '{"cmd":"get_id_list"}';
-    device_insert.run(json['sid'],"Unknown Gateway","gateway");
+    //et on enregistre la gateway
+    var dev = new MDevice({
+      sid: json['sid'],
+      name: "Unknown Gateway",
+      model: "gateway"
+    });
+    dev.save();
+
     console.log('Step 3. Send %s to %s:%d', cmd, address, port);
     serverSocket.send(cmd, 0, cmd.length, port, address);
   }
@@ -142,7 +155,11 @@ serverSocket.on('message', function(msg, rinfo){
     for(var index in data) {
       var sid = data[index];
       //on insere les nouvelles devices
-      device_insert.run(sid,"Unknown device");
+      var dev = new MDevice({
+        sid: json['sid'],
+        name: "Unknown Device"
+      });
+      dev.save();
 
       //on demande a chaque device son etat
       var response = '{"cmd":"read", "sid":"' + sid + '"}';
@@ -158,7 +175,9 @@ serverSocket.on('message', function(msg, rinfo){
   else if (cmd === 'read_ack' || cmd === 'report' || cmd === 'heartbeat') {
     if (cmd === 'read_ack') {
       //on update ici le model des devices car on a demandé un etat des lieux
-      device_update_model.run(json['model'],json['sid']);
+      var dev = MDevice.find({sid:json['sid'] });
+      dev.model = json['model'];
+      dev.save();
     }
 
     //pour les capteurs multiple on enregistre separement les etats

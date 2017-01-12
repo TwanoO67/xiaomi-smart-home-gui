@@ -1,14 +1,14 @@
-module.exports = function(mongoose,genApi,app,router){
+module.exports = function(mongoose){
   schema = new mongoose.Schema({
-    date: { type: Date, default: Date.now },
     sid: String,
-    data_type: String,
     model: String,
     cmd: String,
     data: String
+  },{
+    timestamps: true
   });
 
   model = mongoose.model('events', schema);
 
-  genApi(app,router,model,"/api");
+  return model;
 }

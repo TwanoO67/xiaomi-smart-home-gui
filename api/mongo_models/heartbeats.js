@@ -1,15 +1,17 @@
-module.exports = function(mongoose,genApi,app,router){
+module.exports = function(mongoose){
   schema = new mongoose.Schema({
     sid: String,
     model: String,
+    data_type: String,
     is_last_state:Boolean,
     data: String,
     interval_begin_date: { type: Date, default: Date.now },
     interval_end_date: Date,
-    last_heartbeat_date: { type: Date, default: Date.now }
+  },{
+    timestamps: true
   });
 
   model = mongoose.model('heartbeats', schema);
 
-  genApi(app,router,model,"/api");
+  return model;
 }
