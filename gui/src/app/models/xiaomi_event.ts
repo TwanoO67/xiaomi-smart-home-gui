@@ -1,6 +1,5 @@
 export class XiaomiEvent{
   public id: number = 0;
-  public date: number = 0;
   public sid: string = "";
   public model: string = "";
   public cmd: string = "";

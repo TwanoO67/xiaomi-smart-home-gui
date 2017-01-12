@@ -37,7 +37,7 @@ export class HomeComponent implements OnInit {
       //tri des données par jours
       this.event_by_day = {};
       this.last_events.forEach((event)=>{
-        let date: Date = new Date(event.date);
+        let date: Date = new Date(event.createdAt);
         let day = date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear();
         if(typeof this.event_by_day[day] === "undefined"){
           this.event_by_day[day] = [];

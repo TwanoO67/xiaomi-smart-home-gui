@@ -3,6 +3,8 @@ module.exports = function(mongoose){
     sid: String,
     name: String,
     model: String
+  },{
+    timestamps: true
   });
 
   model = mongoose.model('devices', schema);

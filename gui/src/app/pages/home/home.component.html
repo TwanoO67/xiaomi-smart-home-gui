@@ -16,7 +16,7 @@ Commenter <button type="button" class="btn btn-default btn-flat" (click)="toggle
         <template [ngSwitchCase]="'motion'">
           <i class="fa fa-male bg-blue"></i>
           <div class="timeline-item">
-              <span class="time"><i class="fa fa-clock-o"></i> {{event.date | date : 'mediumTime' }}</span>
+              <span class="time"><i class="fa fa-clock-o"></i> {{event.createdAt | date : 'mediumTime' }}</span>
 
               <h3 class="timeline-header"><a href="#">Mouvement</a> {{(event.sid | toDevice).name }}
                 <span *ngIf="event.getData().status === 'motion' ">Début de passage</span>
@@ -33,7 +33,7 @@ Commenter <button type="button" class="btn btn-default btn-flat" (click)="toggle
         <template [ngSwitchCase]="'magnet'">
           <i [ngClass]="{'fa':true, 'bg-maroon':true, 'fa-lock': event.getData().status === 'close',  'fa-unlock': event.getData().status !== 'close'}" ></i>
           <div class="timeline-item">
-              <span class="time"><i class="fa fa-clock-o"></i> {{event.date | date : 'mediumTime' }}</span>
+              <span class="time"><i class="fa fa-clock-o"></i> {{event.createdAt | date : 'mediumTime' }}</span>
 
               <h3 class="timeline-header">
                 <a href="#" *ngIf="event.getData().status === 'close'">Fermeture</a>
@@ -47,7 +47,7 @@ Commenter <button type="button" class="btn btn-default btn-flat" (click)="toggle
         <template [ngSwitchCase]="'switch'">
           <i class="fa fa-mouse-pointer bg-maroon"></i>
           <div class="timeline-item">
-              <span class="time"><i class="fa fa-clock-o"></i> {{event.date | date : 'mediumTime' }}</span>
+              <span class="time"><i class="fa fa-clock-o"></i> {{event.createdAt | date : 'mediumTime' }}</span>
 
               <h3 class="timeline-header"><a href="#">Clic</a> {{(event.sid | toDevice).name }}</h3>
               <app-home-comment [event]='event' [write_mode]='mode'></app-home-comment>
@@ -56,7 +56,7 @@ Commenter <button type="button" class="btn btn-default btn-flat" (click)="toggle
         <template [ngSwitchCase]="'sensor_ht'">
           <i class="fa fa-thermometer-quarter bg-green"></i>
           <div class="timeline-item">
-              <span class="time"><i class="fa fa-clock-o"></i> {{event.date | date : 'mediumTime' }}</span>
+              <span class="time"><i class="fa fa-clock-o"></i> {{event.createdAt | date : 'mediumTime' }}</span>
 
               <h3 class="timeline-header">
                 <a href="#" *ngIf="event.data_type==='temperature'">Temperature</a>
@@ -72,7 +72,7 @@ Commenter <button type="button" class="btn btn-default btn-flat" (click)="toggle
           <!-- timeline icon -->
           <i class="fa fa-lock bg-maroon"></i>
           <div class="timeline-item">
-              <span class="time"><i class="fa fa-clock-o"></i> {{event.date | date : 'mediumTime' }}</span>
+              <span class="time"><i class="fa fa-clock-o"></i> {{event.createdAt | date : 'mediumTime' }}</span>
 
               <h3 class="timeline-header">
                 <a href="#" >Evenement autre</a>

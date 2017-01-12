@@ -6,7 +6,7 @@ import { XiaomiEventService } from "../../services/data/xiaomi_event.service";
   selector: 'app-home-bar',
   inputs: ['event','write_mode'],
   template:`
-  <span class="time"><i class="fa fa-clock-o"></i> {{event.date | date : 'mediumTime' }}</span>
+  <span class="time"><i class="fa fa-clock-o"></i> {{event.createdAt | date : 'mediumTime' }}</span>
   `
 })
 export class CommentComponent implements OnInit {
