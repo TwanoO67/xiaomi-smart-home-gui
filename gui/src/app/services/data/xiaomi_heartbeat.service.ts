@@ -10,7 +10,7 @@ export class XiaomiHeartbeatService extends NodeRestService {
 
     constructor( _http: Http ) {
         super( _http );
-        this.modelName = 'xiaomi_heartbeat';
+        this.modelName = 'heartbeats';
     }
 
     public getAll(): Observable<XiaomiHeartbeat[]> {

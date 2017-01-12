@@ -10,7 +10,7 @@ export class XiaomiDeviceService extends NodeRestService {
 
     constructor(_http: Http) {
         super(_http);
-        this.modelName = 'xiaomi_device';
+        this.modelName = 'devices';
     }
 
     //fake data pour le pipe

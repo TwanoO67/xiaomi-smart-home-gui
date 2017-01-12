@@ -5,5 +5,5 @@
 
 export const environment = {
   production: true,
-  backendURL: "/"
+  backendURL: "/api"
 };

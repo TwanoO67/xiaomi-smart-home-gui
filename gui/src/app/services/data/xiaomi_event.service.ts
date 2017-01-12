@@ -10,7 +10,7 @@ export class XiaomiEventService extends NodeRestService {
 
     constructor( _http: Http ) {
         super( _http );
-        this.modelName = 'xiaomi_event';
+        this.modelName = 'events';
     }
 
     public getAll(): Observable<XiaomiEvent[]> {
