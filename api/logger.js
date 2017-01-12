@@ -171,7 +171,7 @@ serverSocket.on('message', function(msg, rinfo){
   else if (cmd === 'read_ack' || cmd === 'report' || cmd === 'heartbeat') {
     if (cmd === 'read_ack') {
       //on update ici le model des devices car on a demandé un etat des lieux
-      MDevice.findOne({sid:json['sid'] },function(err,ver){
+      MDevice.findOne({sid:json['sid'] },function(err,dev){
         dev.model = json['model'];
         dev.save(function(result){console.log(result)});
       });
