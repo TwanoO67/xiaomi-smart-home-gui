@@ -8,17 +8,14 @@ Vous pouvez lancer l'application entierement via docker, pour cela :
 
 Remplacer mon_disk/mon_dossier par le dossier ou vous souhaitez sauvegarder votre base de donnée
 
-```docker run -v /mon_disk/mon_dossier:/mihome/db -d --net host --name mihome twanoo/mihome```
+```docker run -v /mon_disk/mon_dossier:/data/db -d --net host --name mihome twanoo/mihome```
 
 L'appli est ensuite disponible sur le port 3000
 
 ## Lancement du projet sans Docker
 
 ### Prérequis
-Vous devez avoir node > 5
-
-### Facultatif: Placez votre base existante ou utiliser les données de test
-```cp db/test.db db/database.db```
+Vous devez avoir node > 5 et une base mongoDb
 
 ### Installer les dependances
 ``` ./install.sh ```

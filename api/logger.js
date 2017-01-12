@@ -6,11 +6,7 @@ const multicastPort = 4321;
 var sidToAddress = {};
 var sidToPort = {};
 
-//connexion à mongoose
-mongoUrl = '127.0.0.1:27017';
-mongoose = require('mongoose');
-mongoose.Promise = global.Promise;
-mongoose.connect(mongoUrl);
+var mongoose = require("./mongo_connexion")();
 
 //Recuperation des modeles
 var MEvent = require("./mongo_models/events")(mongoose);

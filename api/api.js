@@ -7,10 +7,7 @@ var app = koa();
 app.use(serve('gui'));
 
 //connexion à mongoose
-mongoUrl = '127.0.0.1:27017';
-mongoose = require('mongoose');
-mongoose.Promise = global.Promise;
-mongoose.connect(mongoUrl);
+var mongoose = require("./mongo_connexion")();
 koaRestMongoose = require('koa-rest-mongoose');
 
 //ajout de chaque model a l'api
