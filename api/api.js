@@ -4,7 +4,7 @@ var router = require('koa-router')();
 var app = koa();
 
 //Livraison static de la gui par koa-static
-app.use(serve('gui'));
+app.use(serve(__dirname+'/gui'));
 
 //connexion à mongoose
 var mongoose = require("./mongo_connexion")();
