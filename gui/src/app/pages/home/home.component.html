@@ -19,8 +19,8 @@ Commenter <button type="button" class="btn btn-default btn-flat" (click)="toggle
               <span class="time"><i class="fa fa-clock-o"></i> {{event.createdAt | date : 'mediumTime' }}</span>
 
               <h3 class="timeline-header"><a href="#">Mouvement</a> {{(event.sid | toDevice).name }}
-                <span *ngIf="event.getData().status === 'motion' ">Début de passage</span>
-                <span *ngIf="event.getData().status === 'no_motion' ">Fin de passage</span>
+                <span *ngIf="event.data.status === 'motion' ">Début de passage</span>
+                <span *ngIf="event.data.status === 'no_motion' ">Fin de passage</span>
               </h3>
               <app-home-comment [event]='event' [write_mode]='mode'></app-home-comment>
               <!--
@@ -31,13 +31,13 @@ Commenter <button type="button" class="btn btn-default btn-flat" (click)="toggle
           </div>
         </template>
         <template [ngSwitchCase]="'magnet'">
-          <i [ngClass]="{'fa':true, 'bg-maroon':true, 'fa-lock': event.getData().status === 'close',  'fa-unlock': event.getData().status !== 'close'}" ></i>
+          <i [ngClass]="{'fa':true, 'bg-maroon':true, 'fa-lock': event.data.status === 'close',  'fa-unlock': event.data.status !== 'close'}" ></i>
           <div class="timeline-item">
               <span class="time"><i class="fa fa-clock-o"></i> {{event.createdAt | date : 'mediumTime' }}</span>
 
               <h3 class="timeline-header">
-                <a href="#" *ngIf="event.getData().status === 'close'">Fermeture</a>
-                <a href="#" *ngIf="event.getData().status !== 'close'">Ouverture</a>
+                <a href="#" *ngIf="event.data.status === 'close'">Fermeture</a>
+                <a href="#" *ngIf="event.data.status !== 'close'">Ouverture</a>
                 {{(event.sid | toDevice).name }}
               </h3>
               <app-home-comment [event]='event' [write_mode]='mode'></app-home-comment>

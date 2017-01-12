@@ -96,29 +96,25 @@ export class HeartbeatComponent implements OnInit {
   }
 
   private getGraphDataforHB(hb: XiaomiHeartbeat){
-    let data = {
-      line1: null,
-      line2: null
-    };
+    let data = {};
     if(hb.model === "motion"){
-      if( hb.getData().status !== "no_motion" ){
-        data.line1 = 1;
+      if( hb.data.status !== "no_motion" ){
+        data = 1;
       }
       else{
-        data.line1 = 0;
+        data = 0;
       }
     }
     else if(hb.model === "magnet"){
-      if( hb.getData().status !== "close" ){
-        data.line1 = 1;
+      if( hb.data.status !== "close" ){
+        data = 1;
       }
       else{
-        data.line1 = 0;
+        data = 0;
       }
     }
     else if(hb.model === "sensor_ht"){
-      data.line1 = hb.getData().temperature;
-      data.line2 = hb.getData().humidity;
+      data = hb.data;
     }
     else{
       console.log('traitement non pris');
@@ -137,7 +133,6 @@ export class HeartbeatComponent implements OnInit {
           return true;
         }
         let mydata = [];
-        let mydata2 = [];
         let mylabel = [];
         this.heartbeats.forEach((hb) => {
 
@@ -145,21 +140,15 @@ export class HeartbeatComponent implements OnInit {
               //Ajout du point de début
               mylabel.push(hb.interval_begin_date+"");
               let data = this.getGraphDataforHB(hb);
-              if(data.line1){
-                mydata.push(data.line1);
-              }
-              if(data.line2){
-                mydata2.push(data.line2);
+              if(data){
+                mydata.push(data);
               }
 
               //si l'interval est fini on ajoute aussi le point final (avec les meme data)
               if(hb.interval_end_date > 0){
                 mylabel.push(hb.interval_end_date);
-                if(data.line1){
-                  mydata.push(data.line1);
-                }
-                if(data.line2){
-                  mydata2.push(data.line2);
+                if(data){
+                  mydata.push(data);
                 }
               }
 
@@ -170,9 +159,6 @@ export class HeartbeatComponent implements OnInit {
         let new_graph: any = {};
         new_graph.lineChartData = [];
         new_graph.lineChartData.push({data: mydata, label: "Ma série "+device.model});
-        if(mydata2.length > 0){
-          new_graph.lineChartData.push({data: mydata2, label: "Ma série 2 "+device.model});
-        }
         new_graph.lineChartLabels = mylabel;
         new_graph.lineChartColors = this.lineChartColors;
         new_graph.lineChartOptions = this.lineChartOptions;
@@ -180,7 +166,6 @@ export class HeartbeatComponent implements OnInit {
         new_graph.lineChartLegend = this.lineChartLegend;
         this.graphs.push(new_graph);
 
-        this.graphs = ["test","1","2"]
         console.log(this.graphs);
 
       });

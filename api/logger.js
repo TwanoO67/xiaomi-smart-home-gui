@@ -50,7 +50,7 @@ function popInterestingEvent(json){
     sid: json['sid'],
     model: json['model'],
     cmd: json['cmd'],
-    data: json['data']
+    data: JSON.parse(json['data'])
   });
   evenement.save();
 }
