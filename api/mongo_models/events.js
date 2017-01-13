@@ -3,7 +3,7 @@ module.exports = function(mongoose){
     sid: String,
     model: String,
     cmd: String,
-    data: Schema.Types.Mixed
+    data: mongoose.Schema.Types.Mixed
   },{
     timestamps: true
   });
