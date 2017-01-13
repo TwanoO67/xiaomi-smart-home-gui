@@ -56,9 +56,16 @@ function popInterestingEvent(json){
 }
 
 function updateState(json,type=""){
-  //ici on retire certain event, nottament les button (on ne veut pas suivre les periodes de non-appuie..)
-  if(json['model'] === "switch" && json['data'] !== "{}"){
-    popInterestingEvent(json);
+  //ici on retire ce qui n'est pas un heartbeat
+  if(
+    json['model'] === "switch"
+    || json['model'] === "gateway"
+  ){
+    //mais si c'est interessant on pop quand meme un evenement
+    //ici si on clic un bouton
+    if(json['model'] === "switch" && json['data'] !== "{}"){
+      popInterestingEvent(json);
+    }
     return true;
   }
 
@@ -70,29 +77,27 @@ function updateState(json,type=""){
         return true;
       }
       //si aucune ligne
-      var decdata = JSON.parse(json['data']);
       var neednew = false;
       //si on a deja une ligne
-      if(hb){
+      if(hb !== null){
         //on verifie si data sont les memes
-        if(hb.data === decdata ){
+        if( JSON.stringify(hb.data) === json['data'] ){
           //si oui on update la date de updatedAt
-          hb.save();
-        }
-        //si non
-        else{
 
           //filtre sur les devices qui bougent trop souvent
           let miniDelay = 60*5;
           if(json['model']==="sensor_ht" && (hb.interval_begin_date + miniDelay) < now ){
             return true;
           }
+          hb.save();
+        }
+        //si non
+        else{
 
           //on pop un event (le changement d'etat) sauf pour les sensor de temperature
           if(json['model']!=="sensor_ht"){
             popInterestingEvent(json);
           }
-
           //on ferme l'interval
           hb.interval_end_date = now;
           hb.save();
@@ -107,7 +112,7 @@ function updateState(json,type=""){
           model: json['model'],
           data_type: type,
           is_last_state: true,
-          data: decdata ,
+          data: JSON.parse(json['data']) ,
           interval_begin_date: now
         });
         HB.save();
@@ -157,15 +162,15 @@ serverSocket.on('message', function(msg, rinfo){
   else if (cmd === 'get_id_list_ack') {
     var data = JSON.parse(json['data']);
     for(var index in data) {
-      var sid = data[index];
+      var dsid = data[index];
       //on insere les nouvelles devices
-      MDevice.findOne({sid:json['sid'] },function(error,dev){
+      MDevice.findOne({sid: dsid },function(error,dev){
         if(error){
           console.error(error);
         }
         if(dev === null){
           dev = new MDevice({
-            sid: json['sid'],
+            sid: dsid,
             name: "Unknown Device"
           });
           dev.save();
@@ -173,10 +178,10 @@ serverSocket.on('message', function(msg, rinfo){
       })
 
       //on demande a chaque device son etat
-      var response = '{"cmd":"read", "sid":"' + sid + '"}';
-      // on stoque les infos de la gateway sur lequel contacté ce device sid
-      sidToAddress[sid] = rinfo.address;
-      sidToPort[sid] = rinfo.port;
+      var response = '{"cmd":"read", "sid":"' + dsid + '"}';
+      // on stoque l'ip/port de la gateway sur laquel on peut contacté ce device
+      sidToAddress[dsid] = rinfo.address;
+      sidToPort[dsid] = rinfo.port;
 
       console.log('Step 4. Send %s to %s:%d', response, rinfo.address, rinfo.port);
       serverSocket.send(response, 0, response.length, rinfo.port, rinfo.address);
