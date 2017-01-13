@@ -136,6 +136,7 @@ serverSocket.on('message', function(msg, rinfo){
     var cmd = '{"cmd":"get_id_list"}';
     //et on enregistre la gateway
     var dev = new MDevice({
+      _id: json['sid'],
       sid: json['sid'],
       name: "Unknown Gateway",
       model: "gateway"
@@ -152,6 +153,7 @@ serverSocket.on('message', function(msg, rinfo){
       var sid = data[index];
       //on insere les nouvelles devices
       var dev = new MDevice({
+        _id: json['sid'],
         sid: json['sid'],
         name: "Unknown Device"
       });
