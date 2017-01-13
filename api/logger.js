@@ -81,18 +81,16 @@ function updateHeartbeatState(json,type=""){
       if(hb !== null){
         //on verifie si data sont les memes
         if( JSON.stringify(hb.data) === json['data'] ){
-          //si oui on update la date de updatedAt
-
           //filtre sur les devices qui bougent trop souvent
           let miniDelay = 60*5;
           if(json['model']==="sensor_ht" && (hb.interval_begin_date + miniDelay) < now ){
             return true;
           }
+          //si oui on update la date de updatedAt
           hb.save();
         }
         //si non
         else{
-
           //on pop un event (le changement d'etat) sauf pour les sensor de temperature
           if(json['model']!=="sensor_ht"){
             popInterestingEvent(json);
@@ -104,7 +102,7 @@ function updateHeartbeatState(json,type=""){
           neednew = true;
         }
       }
-      if(!hb || neednew){
+      if(hb === null || neednew){
         //on crée un nouvel interval
         var HB = new MHeartbeat({
           sid: json['sid'],
@@ -205,11 +203,11 @@ serverSocket.on('message', function(msg, rinfo){
       let copy = JSON.parse(JSON.stringify(json));//deep clone
       let datadec = JSON.parse(json['data']);
       if(typeof datadec['temperature'] !== "undefined"){
-        copy['data'] = datadec['temperature'];
+        copy['data'] = JSON.stringify(datadec['temperature']);
         updateHeartbeatState(copy,'temperature');
       }
       if(typeof datadec['humidity'] !== "undefined"){
-        copy['data'] = datadec['humidity'];
+        copy['data'] = JSON.stringify(datadec['humidity']);
         updateHeartbeatState(copy,'humidity');
       }
     }
