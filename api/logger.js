@@ -55,7 +55,7 @@ function popInterestingEvent(json){
   evenement.save(function(result){console.log(result)});;
 }
 
-function updateState(json,type=""){
+function updateHeartbeatState(json,type=""){
   //ici on retire ce qui n'est pas un heartbeat
   if(
     json['model'] === "switch"
@@ -190,11 +190,12 @@ serverSocket.on('message', function(msg, rinfo){
   else if (cmd === 'read_ack' || cmd === 'report' || cmd === 'heartbeat') {
     if (cmd === 'read_ack') {
       //on update ici le model des devices car on a demandé un etat des lieux
+      console.log('read ack... updating model for '+json['sid']+" -> "+json['model'])
       MDevice.findOne({sid: json['sid']}, function (err, dev) {
         if (err) console.log(err);
-        if(dev!==null){
+        if(dev){
           dev.model = json['model'];
-          dev.save();
+          dev.save()
         }
       });
     }
@@ -205,16 +206,16 @@ serverSocket.on('message', function(msg, rinfo){
       let datadec = JSON.parse(json['data']);
       if(typeof datadec['temperature'] !== "undefined"){
         copy['data'] = datadec['temperature'];
-        updateState(copy,'temperature');
+        updateHeartbeatState(copy,'temperature');
       }
       if(typeof datadec['humidity'] !== "undefined"){
         copy['data'] = datadec['humidity'];
-        updateState(copy,'humidity');
+        updateHeartbeatState(copy,'humidity');
       }
     }
     //sinon on enregistre tout
     else{
-      updateState(json,'');//necessaire pour le motion (entre autre), mais a eviter pour le button
+      updateHeartbeatState(json,'');//necessaire pour le motion (entre autre), mais a eviter pour le button
     }
     printLog(json);
   }
