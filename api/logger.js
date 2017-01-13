@@ -190,9 +190,12 @@ serverSocket.on('message', function(msg, rinfo){
   else if (cmd === 'read_ack' || cmd === 'report' || cmd === 'heartbeat') {
     if (cmd === 'read_ack') {
       //on update ici le model des devices car on a demandé un etat des lieux
-      MDevice.update({sid: json['sid'] }, { model: json['model'] }, function (err, raw) {
+      MDevice.findOne({sid: json['sid']}, function (err, dev) {
         if (err) console.log(err);
-        console.log('The raw response from Mongo was ', raw);
+        if(dev!==null){
+          dev.model = json['model'];
+          dev.save();
+        }
       });
     }
 
