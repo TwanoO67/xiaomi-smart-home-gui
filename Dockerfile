@@ -3,10 +3,12 @@ FROM node:latest
 # Create app directory
 RUN mkdir -p /mihome
 WORKDIR /mihome
-#COPY . /mihome
+
+#install from local
+COPY . /mihome
 
 #Install from github
-RUN git clone https://github.com/TwanoO67/xiaomi-smart-home-gui.git .
+#RUN git clone https://github.com/TwanoO67/xiaomi-smart-home-gui.git .
 
 RUN ./bin/install.sh
 
