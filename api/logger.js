@@ -59,7 +59,6 @@ function updateState(json,type=""){
   //ici on retire ce qui n'est pas un heartbeat
   if(
     json['model'] === "switch"
-    || json['model'] === "gateway"
   ){
     //mais si c'est interessant on pop quand meme un evenement
     //ici si on clic un bouton
@@ -187,18 +186,18 @@ serverSocket.on('message', function(msg, rinfo){
       serverSocket.send(response, 0, response.length, rinfo.port, rinfo.address);
     }
   }
-  //on recoi l'etat d'une device par demande du logger, un push, ou un ping
+  //on recois l'etat d'une device par demande du logger, un push, ou un ping
   else if (cmd === 'read_ack' || cmd === 'report' || cmd === 'heartbeat') {
     if (cmd === 'read_ack') {
       //on update ici le model des devices car on a demandé un etat des lieux
-      MDevice.update({sid:json['sid'] }, { model: json['model'] }, { multi: false }, function (err, raw) {
+      MDevice.update({sid: json['sid'] }, { model: json['model'] }, function (err, raw) {
         if (err) console.log(err);
-        //console.log('The raw response from Mongo was ', raw);
+        console.log('The raw response from Mongo was ', raw);
       });
     }
 
     //pour les capteurs multiple on enregistre separement les etats
-    if(json['model']=="sensor_ht"){
+    if(json['model']==="sensor_ht"){
       let copy = JSON.parse(JSON.stringify(json));//deep clone
       let datadec = JSON.parse(json['data']);
       if(typeof datadec['temperature'] !== "undefined"){
