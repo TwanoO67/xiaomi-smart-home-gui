@@ -4,7 +4,7 @@ module.exports = function(mongoose){
     model: String,
     data_type: String,
     is_last_state:Boolean,
-    data: String,
+    data: Schema.Types.Mixed,
     interval_begin_date: { type: Date, default: Date.now },
     interval_end_date: Date,
   },{
