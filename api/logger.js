@@ -63,7 +63,7 @@ function updateState(json,type=""){
   }
 
   //recupere le dernier heartbeat de ce device
-  MHeartbeat.findOne({sid: json['sid'], is_last_state: true },function(err, hb) {
+  MHeartbeat.findOne({sid: json['sid'], data_type: type, is_last_state: true },function(err, hb) {
       var now = Date.now();//on fixe la microseconde
       if(err){
         console.error(err);
@@ -77,7 +77,7 @@ function updateState(json,type=""){
         //on verifie si data sont les memes
         if(hb.data === decdata ){
           //si oui on update la date de updatedAt
-          hb.save(function(result){console.log(result)});;
+          hb.save();
         }
         //si non
         else{
@@ -95,7 +95,7 @@ function updateState(json,type=""){
 
           //on ferme l'interval
           hb.interval_end_date = now;
-          hb.save(function(result){console.log(result)});;
+          hb.save();
           //puis on crée un nouveau avec les new data
           neednew = true;
         }
@@ -152,12 +152,16 @@ serverSocket.on('message', function(msg, rinfo){
     for(var index in data) {
       var sid = data[index];
       //on insere les nouvelles devices
-      var dev = new MDevice({
-        _id: json['sid'],
-        sid: json['sid'],
-        name: "Unknown Device"
-      });
-      dev.save(function(result){console.log(result)});;
+      MDevice.findOne({sid:json['sid'] },function(err,dev){
+        if(!dev){
+          dev = new MDevice({
+            _id: json['sid'],
+            sid: json['sid'],
+            name: "Unknown Device"
+          });
+          dev.save();
+        }
+      })
 
       //on demande a chaque device son etat
       var response = '{"cmd":"read", "sid":"' + sid + '"}';
