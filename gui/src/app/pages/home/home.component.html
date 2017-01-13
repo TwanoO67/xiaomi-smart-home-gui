@@ -81,7 +81,7 @@ Commenter <button type="button" class="btn btn-default btn-flat" (click)="toggle
               <app-home-comment [event]='event' [write_mode]='mode'></app-home-comment>
 
               <div class="timeline-footer">
-                  {{event.data}}
+                  {{ event.data | toJSON }}
               </div>
           </div>
         </template>

@@ -110,7 +110,7 @@ function updateState(json,type=""){
           data: decdata ,
           interval_begin_date: now
         });
-        HB.save(function(result){console.log(result)});;
+        HB.save();
       }
   });
 }
@@ -135,13 +135,20 @@ serverSocket.on('message', function(msg, rinfo){
     //on lui demande la liste de ses devices
     var cmd = '{"cmd":"get_id_list"}';
     //et on enregistre la gateway
-    var dev = new MDevice({
-      _id: json['sid'],
-      sid: json['sid'],
-      name: "Unknown Gateway",
-      model: "gateway"
-    });
-    dev.save(function(result){console.log(result)});;
+    MDevice.find({sid: json['sid']},function(error,gtw){
+      if(error){
+        console.error(error);
+      }
+      if(gtw === null){
+        var dev = new MDevice({
+          sid: json['sid'],
+          name: "Unknown Gateway",
+          model: "gateway"
+        });
+        dev.save();
+      }
+    })
+
 
     console.log('Step 3. Send %s to %s:%d', cmd, address, port);
     serverSocket.send(cmd, 0, cmd.length, port, address);
@@ -152,10 +159,12 @@ serverSocket.on('message', function(msg, rinfo){
     for(var index in data) {
       var sid = data[index];
       //on insere les nouvelles devices
-      MDevice.findOne({sid:json['sid'] },function(err,dev){
-        if(!dev){
+      MDevice.findOne({sid:json['sid'] },function(error,dev){
+        if(error){
+          console.error(error);
+        }
+        if(dev === null){
           dev = new MDevice({
-            _id: json['sid'],
             sid: json['sid'],
             name: "Unknown Device"
           });
@@ -177,11 +186,9 @@ serverSocket.on('message', function(msg, rinfo){
   else if (cmd === 'read_ack' || cmd === 'report' || cmd === 'heartbeat') {
     if (cmd === 'read_ack') {
       //on update ici le model des devices car on a demandé un etat des lieux
-      MDevice.findOne({sid:json['sid'] },function(err,dev){
-        if(dev){
-          dev.model = json['model'];
-          dev.save(function(result){console.log(result)});
-        }
+      MDevice.update({sid:json['sid'] }, { model: json['model'] }, { multi: false }, function (err, raw) {
+        if (err) console.log(err);
+        //console.log('The raw response from Mongo was ', raw);
       });
     }
 

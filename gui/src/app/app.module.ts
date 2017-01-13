@@ -72,9 +72,11 @@ let pages = [
 ]
 
 import { toDevicePipe } from "./pipes/device";
+import { toJSONPipe } from "./pipes/json";
 
 let pipes = [
-  toDevicePipe
+  toDevicePipe,
+  toJSONPipe
 ]
 
 //main bootstrap
