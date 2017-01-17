@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "Logger, Api and Gui for Xiaomi Smart Home (& friends ..)",
   "license": "WTFPL",
+  "scripts": {
+    "red": "node-red"
+  },
   "keywords": [
     "xiaomi",
     "smart",
@@ -24,6 +27,8 @@
     "koa": "^1.2.1",
     "koa-rest-mongoose": "^1.0.3",
     "koa-router": "^5.4.0",
-    "koa-static": "^2.0.0"
+    "koa-static": "^2.0.0",
+    "node-red": "^0.16.1",
+    "node-red-contrib-hue": "0.0.5"
   }
 }

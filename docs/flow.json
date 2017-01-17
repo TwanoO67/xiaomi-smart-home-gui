@@ -1,0 +1,186 @@
+[
+    {
+        "id": "e5ac4a3b.9ccbf8",
+        "type": "tab",
+        "label": "Flow 1"
+    },
+    {
+        "id": "69ef9703.4a5fc8",
+        "type": "udp in",
+        "z": "e5ac4a3b.9ccbf8",
+        "name": "xiaomi",
+        "iface": "",
+        "port": "9898",
+        "ipv": "udp4",
+        "multicast": "true",
+        "group": "224.0.0.50",
+        "datatype": "utf8",
+        "x": 101,
+        "y": 186,
+        "wires": [
+            [
+                "d7d6f6e3.126be8",
+                "ca7ab2f0.0944e"
+            ]
+        ]
+    },
+    {
+        "id": "d7d6f6e3.126be8",
+        "type": "function",
+        "z": "e5ac4a3b.9ccbf8",
+        "name": "log de message",
+        "func": "node.error(msg);\n//interromp la file\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 330,
+        "y": 165,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "357e3f10.67d61",
+        "type": "http in",
+        "z": "e5ac4a3b.9ccbf8",
+        "name": "",
+        "url": "/test",
+        "method": "get",
+        "swaggerDoc": "",
+        "x": 127,
+        "y": 31,
+        "wires": [
+            [
+                "7b0acd9a.de0b24"
+            ]
+        ]
+    },
+    {
+        "id": "50359dec.487f44",
+        "type": "http response",
+        "z": "e5ac4a3b.9ccbf8",
+        "name": "",
+        "x": 515,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "7b0acd9a.de0b24",
+        "type": "function",
+        "z": "e5ac4a3b.9ccbf8",
+        "name": "log du http",
+        "func": "\nnode.error(msg.payload);\n\n//construction du retour\nmsg.payload = \"ok\"\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 323,
+        "y": 32,
+        "wires": [
+            [
+                "50359dec.487f44"
+            ]
+        ]
+    },
+    {
+        "id": "216d4e87.5e01d2",
+        "type": "Hue Set",
+        "z": "e5ac4a3b.9ccbf8",
+        "deviceid": "5",
+        "serverid": "001788231f27",
+        "name": "action sur bloom",
+        "x": 742.5,
+        "y": 286,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "7d5a20a.b2208e",
+        "type": "Hue Pull",
+        "z": "e5ac4a3b.9ccbf8",
+        "deviceid": "5",
+        "serverid": "001788231f27",
+        "name": "etat bloom",
+        "x": 360.5,
+        "y": 394,
+        "wires": [
+            [
+                "65a27a.b32cad88"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "3d369dac.fa6612",
+        "type": "http in",
+        "z": "e5ac4a3b.9ccbf8",
+        "name": "",
+        "url": "/hue",
+        "method": "get",
+        "swaggerDoc": "",
+        "x": 121,
+        "y": 475,
+        "wires": [
+            [
+                "7d5a20a.b2208e"
+            ]
+        ]
+    },
+    {
+        "id": "65a27a.b32cad88",
+        "type": "function",
+        "z": "e5ac4a3b.9ccbf8",
+        "name": "nouvel etat",
+        "func": "msg.payload={\n\t\"on\":[!msg.payload.state.on],\n\t\"transitiontime\":[0],\n\t\"bri\":[1],\n\t\"rgb\":[75,75,255]\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 529,
+        "y": 387,
+        "wires": [
+            [
+                "216d4e87.5e01d2",
+                "abb44070.57b1b"
+            ]
+        ]
+    },
+    {
+        "id": "686e9dae.59f634",
+        "type": "http response",
+        "z": "e5ac4a3b.9ccbf8",
+        "name": "reponse http",
+        "x": 802,
+        "y": 545,
+        "wires": []
+    },
+    {
+        "id": "abb44070.57b1b",
+        "type": "function",
+        "z": "e5ac4a3b.9ccbf8",
+        "name": "ok",
+        "func": "msg.payload = \"ok\"\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 655,
+        "y": 557,
+        "wires": [
+            [
+                "686e9dae.59f634"
+            ]
+        ]
+    },
+    {
+        "id": "ca7ab2f0.0944e",
+        "type": "function",
+        "z": "e5ac4a3b.9ccbf8",
+        "name": "if click",
+        "func": "if(msg.payload){\n    var data = JSON.parse(msg.payload);\n    if(data.cmd == \"report\"\n        && data.model == \"switch\"\n    ){\n        return msg;\n    }\n}\nnode.error(msg.payload)\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 279,
+        "y": 262,
+        "wires": [
+            [
+                "7d5a20a.b2208e"
+            ]
+        ]
+    }
+]

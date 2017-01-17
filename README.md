@@ -8,9 +8,9 @@ Vous pouvez lancer l'application entierement via docker, pour cela :
 
 Remplacer mon_disk/mon_dossier par le dossier ou vous souhaitez sauvegarder votre base de donnée
 
-```./bin/docker-start.sh```
+**./bin/docker-start.sh**
 
-L'appli est ensuite disponible sur le port 3000 et créera automatiquementune base mongodb dans un sousdossier du projet
+L'appli est ensuite disponible sur le port 3000 et créera automatiquement une base mongodb dans un sous-dossier du projet
 (modifier le script docker-start.sh si vous souhaitez modifier son emplacement)
 
 ## Lancement du projet sans Docker

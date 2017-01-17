@@ -1,5 +1,6 @@
 mongodb
 node_modules
+npm-debug.log
 api/gui/out-tsc
 gui/node_modules
 gui/dist
