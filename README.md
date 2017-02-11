@@ -61,3 +61,8 @@ Commande xiaomi https://louiszl.gitbooks.io/lumi-gateway-local-api/content/plug.
 ## Outils de debug
 
 Pour verifier le contenu de la base mongo, vous pouvez utiliser: [mongo-express](https://github.com/mongo-express/mongo-express)
+
+## Support on Beerpay
+Hey dude! Help me out for a couple of :beers:!
+
+[![Beerpay](https://beerpay.io/TwanoO67/xiaomi-smart-home-gui/badge.svg?style=beer-square)](https://beerpay.io/TwanoO67/xiaomi-smart-home-gui)  [![Beerpay](https://beerpay.io/TwanoO67/xiaomi-smart-home-gui/make-wish.svg?style=flat-square)](https://beerpay.io/TwanoO67/xiaomi-smart-home-gui?focus=wish)
